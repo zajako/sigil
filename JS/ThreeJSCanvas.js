@@ -156,7 +156,7 @@ THREECanvas.prototype.addWallSegment = function(x, y){
 
 THREECanvas.prototype.addParticleSystem = function(name, particleCount, color, size, position){
     var particleSystem = new THREE.GPUParticleSystem({
-        maxParticles: 25000
+        maxParticles: 50000
       });
       this.scene.add( particleSystem);
       this.particleSystems.push(particleSystem);
@@ -176,7 +176,7 @@ THREECanvas.prototype.addParticleSystem = function(name, particleCount, color, s
       };
 
       spawnerOptions = {
-        spawnRate: 15000,
+        spawnRate: 5000,
         horizontalSpeed: 0,
         verticalSpeed: 0,
         timeScale: 1
@@ -281,9 +281,9 @@ function update()
     if (tick < 0) tick = 0;
 
     if (delta > 0) {
-        options.position.x = myThreeCanvas.player.x; //Math.sin(tick * spawnerOptions.horizontalSpeed) * 20;
-        options.position.y = 0;//Math.sin(tick * spawnerOptions.verticalSpeed) * 10;
-        options.position.z = myThreeCanvas.player.z;//Math.sin(tick * spawnerOptions.horizontalSpeed + spawnerOptions.verticalSpeed) * 5;
+        options.position.x = Math.sin(tick * spawnerOptions.horizontalSpeed) * 20;
+        options.position.y = Math.sin(tick * spawnerOptions.verticalSpeed) * 10;
+        options.position.z = Math.sin(tick * spawnerOptions.horizontalSpeed + spawnerOptions.verticalSpeed) * 5;
 
         for (var x = 0; x < spawnerOptions.spawnRate * delta; x++) {
           // Yep, that's really it.  Spawning particles is super cheap, and once you spawn them, the rest of
