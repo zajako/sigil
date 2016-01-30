@@ -13,8 +13,12 @@ function Sigil(){
     _cForm = 0;
     _skiper = 0;
     _castFinished = false;
-
     sigil.init();
+
+
+
+    $('#current_hp').width(240);
+    
     // setInterval(function(){
     //     sigil.draw();
     // },5000);
