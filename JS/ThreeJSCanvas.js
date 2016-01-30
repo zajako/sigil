@@ -6,7 +6,7 @@ function Projectile(position, mesh){
    this.mesh = mesh;
 }
 
-Projectile.prototype.getGridPosition = function(){
+Projectile.prototype.getWorldPosition = function(){
     return {x: this.position.x * 5, y: this.position.y, z: this.position.z * 5};
 };
 
@@ -167,7 +167,7 @@ THREECanvas.prototype.addWallSegment = function(x, y){
 
 THREECanvas.prototype.spawnPlayerProjectile = function(element, accent, targets){
     for(var i=0; i < targets.length;i++){
-        this.addMeshToScene(this.makeGeometry(THREE.SphereGeometry, 5, 32, 32), new THREE.MeshBasicMaterial({color: 0x00ff00}), new THREE.Vector3(self.player.x, 0, self.player.z), new THREE.Vector3(0,0,0), "projectile");
+        this.addMeshToScene(this.makeGeometry(THREE.SphereGeometry, .5, 16, 16), new THREE.MeshBasicMaterial({color: 0x00ff00}), new THREE.Vector3(this.player.x, 0, this.player.z), new THREE.Vector3(0,0,0), "projectile");
         var proj = new Projectile({x: this.player.gridX, y: 1, z: this.player.gridZ}, this.projectiles[this.projectiles.length - 1]);
     }
 };
@@ -203,6 +203,10 @@ THREECanvas.prototype.addParticleSystem = function(args){
 
     this.scene.add(particleSystem);
 };
+
+THREECanvas.prototype.getParticleSystemFor = function(thing){
+    return this.particleSystems[0];
+}
 
 THREECanvas.prototype.makeGeometry = function(geoType, width, height, depth){
     var geo = new geoType(width, height, depth);

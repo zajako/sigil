@@ -359,21 +359,22 @@ Sigil.prototype.castSpell = function()
 
     if(_castFinished)
     {
+        console.log(_spellForms);
+        
+        var spell = new Spell(_spellForms[0], _spellForms[0], "ball", "");
+        var spell2 = new Spell(_spellForms[1], _spellForms[1], "ball", "");
+        var spell3 = new Spell(_spellForms[2], _spellForms[2], "ball", "");
+
         console.log("Cast Finished.");
         _spellForms = [];
         _cForm = 0;
         sigil.draw();
         _castFinished = false;
 
-        myThreeCanvas.sendSpell(_spellForms[0].cast, _spellForms[1].cast, _spellForms[2].cast);
-
-        var spell = new Spell(_spellForms[0].cast, _spellForms[0].cast, "ball", "");
-        var spell2 = new Spell(_spellForms[1].cast, _spellForms[1].cast, "ball", "");
-        var spell3 = new Spell(_spellForms[2].cast, _spellForms[2].cast, "ball", "");
 
         spell.cast();
-        spell.cast2();
-        spell.cast3();
+        spell2.cast();
+        spell3.cast();
     }
     else
     {
@@ -381,7 +382,7 @@ Sigil.prototype.castSpell = function()
             sigil.castSpell();
         },50);
     }
-}
+};
 
 function lerpVector2(current, desiredx, desiredy)
 {

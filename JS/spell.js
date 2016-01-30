@@ -1,5 +1,5 @@
 function Spell(name, element, accent, modifier){
-  self = this;
+  holdholdSelf = this;
   this.name = name;
   this.element = element;
   this.particleSystem = myThreeCanvas.getParticleSystemFor(element);
@@ -14,7 +14,7 @@ Spell.prototype.cast = function(){
 
 
   // if(this.accent == "ball"){
-  //   if(this.modifier == "self"){
+  //   if(this.modifier == "holdSelf"){
   //     myThreeCanvas.player.resist = this.element;
   //   }
   //   else if(this.modifier == "ring"){
@@ -31,7 +31,7 @@ Spell.prototype.cast = function(){
   //   }
   // }
   // if(this.accent == "blast"){
-  //   if(this.modifier == "self"){
+  //   if(this.modifier == "holdSelf"){
   //     myThreeCanvas.player.counter = this.element;
   //   }
   //   else if(this.modifier == "ring"){
@@ -48,7 +48,7 @@ Spell.prototype.cast = function(){
   //   }
   // }
   // if(this.accent == "wall"){
-  //   if(this.modifier == "self"){
+  //   if(this.modifier == "holdSelf"){
   //     myThreeCanvas.spawnPlayerProjectile(this.element, this.accent, [{forward: -1, right: 0}, {forward: -1, right: 1}, {forward: -1, right: -1}]);
   //   }
   //   else if(this.modifier == "ring"){
