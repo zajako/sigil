@@ -3,52 +3,45 @@
 
 
 function Sigil(){
-    this.width = 800;
-    this.height = 450;
+    sigil = this;
+    sigil.width = 800;
+    sigil.height = 450;
 
-    this.init();
+    sigil.init();
 }
 
 Sigil.prototype.init = function() {
-    this.initCanvas();
-    this.initContext();
-    this.drawBackground();
+    sigil.initCanvas();
+    sigil.initContext();
+    sigil.drawBackground();
 }
 
 Sigil.prototype.initCanvas = function() {
-    this.topScreen = document.createElement('canvas');
-    this.bottomScreen = document.createElement('canvas');
-    this.topScreen.width  = this.width;
-    this.topScreen.height = this.height;
-    this.bottomScreen.width  = this.width;
-    this.bottomScreen.height = this.height;
+    sigil.topScreen = document.createElement('canvas');
+    sigil.bottomScreen = document.createElement('canvas');
+    sigil.topScreen.width  = sigil.width;
+    sigil.topScreen.height = sigil.height;
+    sigil.bottomScreen.width  = sigil.width;
+    sigil.bottomScreen.height = sigil.height;
 };
 
 Sigil.prototype.initContext = function() {
-    this.topCtx = this.topScreen.getContext('2d');
-    this.bottomCtx = this.bottomScreen.getContext('2d');
+    sigil.topCtx = sigil.topScreen.getContext('2d');
+    sigil.bottomCtx = sigil.bottomScreen.getContext('2d');
 };
 
 Sigil.prototype.drawBackground = function() {
-    this.topCtx.strokeStyle = 'red';
-    this.topCtx.lineWidth = 2;
-    this.topCtx.fillStyle = '#9ea7b8'
-    this.topCtx.fillRect(0,0,this.width, this.height);
-    this.topCtx.fill();
+    sigil.topCtx.strokeStyle = 'red';
+    sigil.topCtx.lineWidth = 2;
+    sigil.topCtx.fillStyle = '#9ea7b8'
+    sigil.topCtx.fillRect(0,0,sigil.width, sigil.height);
+    sigil.topCtx.fill();
 
-
-    // var bgImage = new Image;
-    // bgImage.src = 'file:///Volumes/R1/Development/Jams/Sigil/IMG/lowerscreen.png';
-    // var img = document.getElementById("test");
-    // this.bottomCtx.drawImage(img,0,0,this.width,this.height);
-
-    // this.bottomCtx.strokeStyle = 'red';
-    // this.bottomCtx.lineWidth = 2;
-    // this.bottomCtx.fillStyle = '#000000'
-    // this.bottomCtx.fillRect(0,0,this.width, this.height);
-    // this.bottomCtx.fill();
-
+    var bgimage = new Image();
+    bgimage.src = './IMG/lowerscreen.png';
+    bgimage.onload = function() {
+      sigil.bottomCtx.drawImage(this, 0, 0);
+    };
 };
 
-
-   
+var sigil = new Sigil();   
