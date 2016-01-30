@@ -276,34 +276,43 @@ Sigil.prototype.mouseUpEvent = function(x, y)
         {
             var points = _spellForms[_cForm].points.slice();
 
-            var result = _r.Recognize(points, false);
+            var result = _r.Recognize(points, true);
 
-          console.log("Result: " + result.Name + " (" + round(result.Score,2) + ").");
+            console.log("Result: " + result.Name + " (" + round(result.Score,2) + ").");
 
-          _spellForms[_cForm].setSpellCast(result.Name, _cForm);
+            _spellForms[_cForm].setSpellCast(result.Name, _cForm);
 
+            if(_cForm >= 2)
+            {
+                console.log("Spell Casted! ("+_spellForms[_cForm].cast+")");
+                console.log("Spell Casted! ("+_spellForms[0].cast+", "+_spellForms[1].cast+", "+_spellForms[2].cast+")");
 
-        if(_cForm >= 2)
-        {
-            console.log("Spell Casted! ("+_spellForms[_cForm].cast+")");
-            console.log("Spell Casted! ("+_spellForms[0].cast+", "+_spellForms[1].cast+", "+_spellForms[2].cast+")");
-            _spellForms = [];
-            _cForm = 0;
-        }
+                sigil.castSpell();
+            }
           
-          // _spellForms[_cForm].points = _points.slice();
-          sigil.draw();
+            // _spellForms[_cForm].points = _points.slice();
+            sigil.draw();
         }
         else // fewer than 10 points were inputted
         {
-          console.log("Too few points made. Please try again.");
+            console.log("Too few points made. Please try again.");
         }
-      }
-        
-
-
-
     }
+}
+
+Sigil.prototype.castSpell = function()
+{
+    
+
+
+
+
+
+     _spellForms = [];
+    _cForm = 0;
+
+    
+}
 
 
 Sigil.prototype.getCanvasRect = function(canvas)
