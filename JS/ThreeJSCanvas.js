@@ -1,9 +1,12 @@
+var clock = new THREE.Clock();
+
 function Player(grid){
     this.x = 0;
     this.z = 0;
     this.gridX = 0;
     this.gridZ = 0;
     this.rotY = 0;
+    this.desiredRotY = 0;
     this.grid = grid;
 }
 
@@ -61,27 +64,56 @@ Player.prototype.moveBackward = function(grid){
     }
 };
 
-Player.prototype.turnLeft = function(){
+Player.prototype.setTurnLeft = function(){
     if(this.rotY + Math.PI / 2 >= Math.PI * 2){
-        this.rotY = 0;
+        this.desiredRotY = 0;
     }
     else{
-        this.rotY += Math.PI / 2;
+        this.desiredRotY += (Math.PI / 2);
     }
 };
 
-Player.prototype.turnRight = function(){
+Player.prototype.setTurnRight = function(){
     if(this.rotY - Math.PI / 2 <= Math.PI * -2){
-        this.rotY = 0;
+        this.desiredRotY = 0;
     }
     else{
-        this.rotY -= Math.PI / 2;
+        this.desiredRotY -= (Math.PI / 2);
+    }
+};
+
+Player.prototype.facingEnum = {
+    "Forward" : 0,
+    "Backward" : Math.PI,
+    "Left" : 3 * Math.PI / 2,
+    "Right" : Math.PI / 2
+};
+
+Player.prototype.lerpRotation = function(deltaTime){
+    this.rotY += this.desiredRotY;
+    if(this.rotY >= this.facingEnum.Forward - 0.025 && this.rotY <= this.facingEnum.Forward + 0.025){
+        console.log("Forward");
+        this.rotY = this.facingEnum.Forward;
+    }
+    else if(this.rotY >= this.facingEnum.Backward - 0.025 && this.rotY <= this.facingEnum.Backward + 0.025){
+        console.log("Backward");
+        this.rotY = this.facingEnum.Backward;
+    }
+    else if(this.rotY >= this.facingEnum.Left - 0.025 && this.rotY <= this.facingEnum.Left + 0.025){
+        console.log("Left");
+        this.rotY = this.facingEnum.Left;
+    }
+    else if(this.rotY >= this.facingEnum.Right - 0.025 && this.rotY <= this.facingEnum.Right + 0.025){
+        console.log("Right");
+        this.rotY = this.facingEnum.Right;
     }
 };
 
 function THREECanvas(){
     this.width = 800;
     this.height = 450;
+
+    this.deltaTime = 0;
 
     this.needupdate = true;
 
@@ -96,6 +128,7 @@ function THREECanvas(){
     this.materials = [new THREE.MeshBasicMaterial({color: 0xffffff, side: THREE.DoubleSide})];
     this.meshes = [];
     this.textures = [];
+    this.enemies = [];
 
     this.init();
 }
@@ -105,6 +138,7 @@ THREECanvas.prototype.init = function(){
     document.body.appendChild( this.renderer.domElement );
     this.loadTexture("./IMG/Textures/CobbleFloor.png", 100, 100);
     this.loadTexture("./IMG/Textures/TempleWall.png", 1, 1);
+    this.loadTexture("./IMG/Textures/DummyUVs_textured.png", 1, 1);
     for(var i=0; i < this.map.grid.length; i++){
         for(var j=0; j < this.map.grid[i].length; j++){
             if(this.map.grid[i][j] === 0){
@@ -118,10 +152,10 @@ THREECanvas.prototype.init = function(){
             }
         }
     }
-    for(var k=0; k < 50; k++){
-        this.loadModelGeometry("./MODELS/candle2.json", new THREE.Vector3(getRandomArbitrary(-25, 25), getRandomArbitrary(1, 2), getRandomArbitrary(-25, 25)), new THREE.Vector3(0,0,0));
-    }
-
+    // for(var k=0; k < 50; k++){
+    //     this.loadModelGeometry("./MODELS/candle2.json", new THREE.Vector3(getRandomArbitrary(-25, 25), getRandomArbitrary(1, 2), getRandomArbitrary(-25, 25)), new THREE.Vector3(0,0,0));
+    // }
+    this.loadModelGeometry("./MODELS/Dummy.json", new THREE.Vector3(this.player.x,-1.5,this.player.z), new THREE.Vector3(0,0,0), new THREE.MeshBasicMaterial({color: 0xffffff, map: this.textures[2]}), true);
     this.addMeshToScene(this.makeGeometry(THREE.BoxGeometry, 500, 500, 0.01), new THREE.MeshBasicMaterial({color: 0xffffff, map: this.textures[0]}), new THREE.Vector3(0, -2, 0), new THREE.Vector3(Math.PI / 2,0,0));
 };
 
@@ -138,7 +172,7 @@ THREECanvas.prototype.makeGeometry = function(geoType, width, height, depth){
     return geo;
 };
 
-THREECanvas.prototype.addMeshToScene = function(geo, material, position, rotation){
+THREECanvas.prototype.addMeshToScene = function(geo, material, position, rotation, isEnemy){
     var mesh;
     if(material !== undefined){
         mesh = new THREE.Mesh(geo, material);
@@ -155,6 +189,9 @@ THREECanvas.prototype.addMeshToScene = function(geo, material, position, rotatio
     }
     this.scene.add(mesh);
     this.meshes.push(mesh);
+    if(isEnemy){
+        this.enemies.push(mesh);
+    }
 };
 
 THREECanvas.prototype.addMaterial = function(color){
@@ -176,10 +213,10 @@ THREECanvas.prototype.loadTexture = function(name, repeatX, repeatY){
     this.textures.push(texture);
 };
 
-THREECanvas.prototype.loadModelGeometry = function(pathName, position, rotation){
+THREECanvas.prototype.loadModelGeometry = function(pathName, position, rotation, material, isEnemy){
     var myCanvas = this;
     var test = this.loader.load(pathName, function(geometry){
-        myCanvas.addMeshToScene(geometry, new THREE.MeshBasicMaterial({color: 0xffffff}), position, rotation);
+        myCanvas.addMeshToScene(geometry, material === undefined ? myCanvas.materials[0] : material, position, rotation, isEnemy);
     });
 };
 
@@ -191,7 +228,8 @@ THREECanvas.prototype.updatePosition = function(){
     this.camera.position.set(this.player.x, 0.5, this.player.z);
 };
 
-THREECanvas.prototype.updateRotation = function(){
+THREECanvas.prototype.updateRotation = function(deltaTime){
+    this.player.lerpRotation(deltaTime);
     this.camera.rotation.set(0,this.player.rotY,0);
 };
 
@@ -205,25 +243,25 @@ $("body").keypress(function(event){
             myThreeCanvas.player.moveBackward(myThreeCanvas.map.grid);
             break;
         case 100:
-            myThreeCanvas.player.turnRight();
+            myThreeCanvas.player.setTurnRight(myThreeCanvas.deltaTime);
             break;
         case 97:
-            myThreeCanvas.player.turnLeft();
+            myThreeCanvas.player.setTurnLeft(myThreeCanvas.deltaTime);
             break;
     }
 });
 
 function update()
 {
+    this.deltaTime = clock.getDelta();
     myThreeCanvas.render();
     myThreeCanvas.updatePosition();
-    myThreeCanvas.updateRotation();
+    myThreeCanvas.updateRotation(deltaTime);
+    for(var i=0; i < myThreeCanvas.enemies.length; i++){
+        myThreeCanvas.enemies[i].rotateY();
+    }
     requestAnimationFrame(update);
 }
 
 requestAnimationFrame(update);
 });
-
-
-
-
