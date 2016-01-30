@@ -35,7 +35,7 @@ Player.prototype.moveBackward = function(){
 };
 
 Player.prototype.turnLeft = function(){
-    if(this.rotY + Math.PI / 2 >= Math.PI * 2){
+    if(this.rotY - Math.PI / 2 <= Math.PI * -2){
         this.rotY = 0;
     }
     else{
@@ -44,7 +44,7 @@ Player.prototype.turnLeft = function(){
 };
 
 Player.prototype.turnRight = function(){
-    if(this.rotY - Math.PI / 2 <= Math.PI * -2){
+    if(this.rotY + Math.PI / 2 >= Math.PI * 2){
         this.rotY = 0;
     }
     else{
@@ -76,6 +76,8 @@ THREECanvas.prototype.init = function(){
     document.body.appendChild( this.renderer.domElement );
     this.loadTexture("./IMG/Textures/CobbleFloor.png", 12, 12);
     this.loadTexture("./IMG/Textures/TempleWall.png", 10, 1);
+
+
 };
 
 THREECanvas.prototype.addGeometry = function(geoType, width, height, depth, material, position, rotation){
@@ -147,16 +149,15 @@ $("body").keypress(function(event){
             break;
     }
 });
+var myThreeCanvas = new THREECanvas();
 
-// var myThreeCanvas = new THREECanvas();
+myThreeCanvas.addGeometry(THREE.BoxGeometry, 50, 5, 1, new THREE.MeshBasicMaterial({color: 0xffffff, map: myThreeCanvas.textures[1]}), new THREE.Vector3(0, 0, -25), new THREE.Vector3(0,0,0));
+myThreeCanvas.addGeometry(THREE.BoxGeometry, 50, 5, 1, new THREE.MeshBasicMaterial({color: 0xffffff, map: myThreeCanvas.textures[1]}), new THREE.Vector3(0, 0, 25), new THREE.Vector3(0,0,0));
+myThreeCanvas.addGeometry(THREE.BoxGeometry, 50, 5, 1, new THREE.MeshBasicMaterial({color: 0xffffff, map: myThreeCanvas.textures[1]}), new THREE.Vector3(-25, 0, 0), new THREE.Vector3(0,Math.PI / 2,0));
+myThreeCanvas.addGeometry(THREE.BoxGeometry, 50, 5, 1, new THREE.MeshBasicMaterial({color: 0xffffff, map: myThreeCanvas.textures[1]}), new THREE.Vector3(25, 0, 0), new THREE.Vector3(0,Math.PI / 2,0));
+myThreeCanvas.addGeometry(THREE.BoxGeometry, 50, 50, 0.1, new THREE.MeshBasicMaterial({color: 0xffffff, map: myThreeCanvas.textures[0]}), new THREE.Vector3(0, -2, 0), new THREE.Vector3(Math.PI / 2,0,0));
 
-// myThreeCanvas.addGeometry(THREE.BoxGeometry, 50, 5, 1, new THREE.MeshBasicMaterial({color: 0xffffff, map: myThreeCanvas.textures[1]}), new THREE.Vector3(0, 0, -25), new THREE.Vector3(0,0,0));
-// myThreeCanvas.addGeometry(THREE.BoxGeometry, 50, 5, 1, new THREE.MeshBasicMaterial({color: 0xffffff, map: myThreeCanvas.textures[1]}), new THREE.Vector3(0, 0, 25), new THREE.Vector3(0,0,0));
-// myThreeCanvas.addGeometry(THREE.BoxGeometry, 50, 5, 1, new THREE.MeshBasicMaterial({color: 0xffffff, map: myThreeCanvas.textures[1]}), new THREE.Vector3(-25, 0, 0), new THREE.Vector3(0,Math.PI / 2,0));
-// myThreeCanvas.addGeometry(THREE.BoxGeometry, 50, 5, 1, new THREE.MeshBasicMaterial({color: 0xffffff, map: myThreeCanvas.textures[1]}), new THREE.Vector3(25, 0, 0), new THREE.Vector3(0,Math.PI / 2,0));
-// myThreeCanvas.addGeometry(THREE.BoxGeometry, 50, 50, 0.1, new THREE.MeshBasicMaterial({color: 0xffffff, map: myThreeCanvas.textures[0]}), new THREE.Vector3(0, -2, 0), new THREE.Vector3(Math.PI / 2,0,0));
-
-// myThreeCanvas.camera.position.z = 5;
+myThreeCanvas.camera.position.z = 0;
 
 function update()
 {
