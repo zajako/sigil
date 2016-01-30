@@ -13,11 +13,11 @@ function cButton(url, x, y, w, h, clickable)
     this.bottom = y + h;
 
     this.image = new Image();
-    this.image.src = url;
     this.image.onload = function() {
-        // sigil.draw();
+        sigil.draw();
     }
-
+    this.image.src = url;
+    
     this.isClickable = clickable;
     this.callName = "";
 }
