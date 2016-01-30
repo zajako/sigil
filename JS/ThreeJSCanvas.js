@@ -1,36 +1,62 @@
 function Player(){
     this.x = 0;
     this.z = 0;
+    this.gridX = 0;
+    this.gridZ = 0;
     this.rotY = 0;
 }
 
-Player.prototype.moveForward = function(){
+Player.prototype.moveForward = function(grid){
     if(this.rotY === 0){
-        this.z -= 1;
+        if(grid[this.gridZ - 1][this.gridX] !== 0){
+            this.z -= 5;
+            this.gridZ -= 1;
+        }
     }
     else if(this.rotY == Math.PI / 2 || this.rotY == (-3 * Math.PI / 2)){
-         this.x -= 1;
+        if(grid[this.gridZ][this.gridX - 1] !== 0){
+            this.x -= 5;
+            this.gridX -= 1;
+        }
     }
     else if(this.rotY == (3 * Math.PI / 2) || this.rotY == -Math.PI / 2){
-        this.x += 1;
+        if(grid[this.gridZ][this.gridX + 1] !== 0){
+            this.x += 5;
+            this.gridX += 1;
+        }
     }
     else if(this.rotY == Math.PI || this.rotY == -Math.PI){
-         this.z += 1;
+        if(grid[this.gridZ + 1][this.gridX] !== 0){
+            this.z += 5;
+            this.gridZ += 1;
+        }
     }
 };
 
-Player.prototype.moveBackward = function(){
+Player.prototype.moveBackward = function(grid){
     if(this.rotY === 0){
-        this.z += 1;
+        if(grid[this.gridZ + 1][this.gridX] !== 0){
+            this.z += 5;
+            this.gridZ += 1;
+        }
     }
     else if(this.rotY == Math.PI / 2 || this.rotY == (-3 * Math.PI / 2)){
-        this.x += 1;
+        if(grid[this.gridZ][this.gridX + 1] !== 0){
+            this.x += 5;
+            this.gridX += 1;
+        }
     }
     else if(this.rotY == (3 * Math.PI / 2) || this.rotY == -Math.PI / 2){
-        this.x -= 1;
+        if(grid[this.gridZ][this.gridX - 1] !== 0){
+            this.x -= 5;
+            this.gridX -= 1;
+        }
     }
     else if(this.rotY == Math.PI || this.rotY == -Math.PI){
-        this.z -= 1;
+        if(grid[this.gridZ - 1][this.gridX] !== 0){
+            this.z -= 5;
+            this.gridZ -= 1;
+        }
     }
 };
 
@@ -59,10 +85,12 @@ function THREECanvas(){
     this.needupdate = true;
 
     this.player = new Player();
+    this.map = new Map();
 
     this.scene = new THREE.Scene();
     this.camera = new THREE.PerspectiveCamera( 45, this.width / this.height, 0.1, 1000 );
     this.renderer = new THREE.WebGLRenderer();
+    this.loader = new THREE.JSONLoader();
 
     this.materials = [new THREE.MeshBasicMaterial({color: 0xffffff, side: THREE.DoubleSide})];
     this.meshes = [];
@@ -74,20 +102,43 @@ function THREECanvas(){
 THREECanvas.prototype.init = function(){
     this.renderer.setSize(this.width, this.height);
     document.body.appendChild( this.renderer.domElement );
-    this.loadTexture("./IMG/Textures/CobbleFloor.png", 12, 12);
-    this.loadTexture("./IMG/Textures/TempleWall.png", 10, 1);
+    this.loadTexture("./IMG/Textures/CobbleFloor.png", 100, 100);
+    this.loadTexture("./IMG/Textures/TempleWall.png", 1, 1);
+    for(var i=0; i < this.map.grid.length; i++){
+        for(var j=0; j < this.map.grid[i].length; j++){
+            if(this.map.grid[i][j] === 0){
+                this.addWallSegment(j, i);
+            }
+            if(this.map.grid[i][j] === 2){
+                this.player.x = j * 5;
+                this.player.z = i * 5;
+                this.player.gridX = j;
+                this.player.gridZ = i;
+            }
+        }
+    }
+    for(var k=0; k < 50; k++){
+        this.loadModelGeometry("./Models/candle2.json", new THREE.Vector3(getRandomArbitrary(-25, 25), getRandomArbitrary(1, 2), getRandomArbitrary(-25, 25)), new THREE.Vector3(0,0,0));
+    }
 
-    this.addGeometry(THREE.BoxGeometry, 50, 5, 1, new THREE.MeshBasicMaterial({color: 0xffffff, map: this.textures[1]}), new THREE.Vector3(0, 0, -25), new THREE.Vector3(0,0,0));
-    this.addGeometry(THREE.BoxGeometry, 50, 5, 1, new THREE.MeshBasicMaterial({color: 0xffffff, map: this.textures[1]}), new THREE.Vector3(0, 0, 25), new THREE.Vector3(0,0,0));
-    this.addGeometry(THREE.BoxGeometry, 50, 5, 1, new THREE.MeshBasicMaterial({color: 0xffffff, map: this.textures[1]}), new THREE.Vector3(-25, 0, 0), new THREE.Vector3(0,Math.PI / 2,0));
-    this.addGeometry(THREE.BoxGeometry, 50, 5, 1, new THREE.MeshBasicMaterial({color: 0xffffff, map: this.textures[1]}), new THREE.Vector3(25, 0, 0), new THREE.Vector3(0,Math.PI / 2,0));
-    this.addGeometry(THREE.BoxGeometry, 50, 50, 0.1, new THREE.MeshBasicMaterial({color: 0xffffff, map: this.textures[0]}), new THREE.Vector3(0, -2, 0), new THREE.Vector3(Math.PI / 2,0,0));
-    this.camera.position.z = 0;
+    this.addMeshToScene(this.makeGeometry(THREE.BoxGeometry, 500, 500, 0.01), new THREE.MeshBasicMaterial({color: 0xffffff, map: this.textures[0]}), new THREE.Vector3(0, -2, 0), new THREE.Vector3(Math.PI / 2,0,0));
 };
 
-THREECanvas.prototype.addGeometry = function(geoType, width, height, depth, material, position, rotation){
-    var mesh;
+function getRandomArbitrary(min, max) {
+  return Math.random() * (max - min) + min;
+}
+
+THREECanvas.prototype.addWallSegment = function(x, y){
+    this.addMeshToScene(this.makeGeometry(THREE.BoxGeometry, 5, 5, 5), new THREE.MeshBasicMaterial({color: 0xffffff, map: this.textures[1]}), new THREE.Vector3(x * 5, 0.5, y * 5), new THREE.Vector3(0,0,0));
+};
+
+THREECanvas.prototype.makeGeometry = function(geoType, width, height, depth){
     var geo = new geoType(width, height, depth);
+    return geo;
+};
+
+THREECanvas.prototype.addMeshToScene = function(geo, material, position, rotation){
+    var mesh;
     if(material !== undefined){
         mesh = new THREE.Mesh(geo, material);
     }
@@ -101,7 +152,6 @@ THREECanvas.prototype.addGeometry = function(geoType, width, height, depth, mate
     if(rotation !== undefined){
         mesh.rotation.set(rotation.x, rotation.y, rotation.z);
     }
-
     this.scene.add(mesh);
     this.meshes.push(mesh);
 };
@@ -125,12 +175,19 @@ THREECanvas.prototype.loadTexture = function(name, repeatX, repeatY){
     this.textures.push(texture);
 };
 
+THREECanvas.prototype.loadModelGeometry = function(pathName, position, rotation){
+    var myCanvas = this;
+    var test = this.loader.load(pathName, function(geometry){
+        myCanvas.addMeshToScene(geometry, new THREE.MeshBasicMaterial({color: 0xffffff}), position, rotation);
+    });
+};
+
 THREECanvas.prototype.setNeedUpdate = function(value){
     this.needupdate = value;
 };
 
 THREECanvas.prototype.updatePosition = function(){
-    this.camera.position.set(this.player.x, 0, this.player.z);
+    this.camera.position.set(this.player.x, 0.5, this.player.z);
 };
 
 THREECanvas.prototype.updateRotation = function(){
@@ -141,10 +198,10 @@ $().ready(function(){
 $("body").keypress(function(event){
     switch(event.which){
         case 119:
-            myThreeCanvas.player.moveForward();
+            myThreeCanvas.player.moveForward(myThreeCanvas.map.grid);
             break;
         case 115:
-            myThreeCanvas.player.moveBackward();
+            myThreeCanvas.player.moveBackward(myThreeCanvas.map.grid);
             break;
         case 100:
             myThreeCanvas.player.turnLeft();
@@ -160,9 +217,6 @@ function update()
     myThreeCanvas.render();
     myThreeCanvas.updatePosition();
     myThreeCanvas.updateRotation();
-    // for(var i=0; i<myThreeCanvas.meshes.length;i++){
-    //     myThreeCanvas.meshes[i].rotation.x += i * 0.01;
-    // }
     requestAnimationFrame(update);
 }
 

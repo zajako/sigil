@@ -85,7 +85,7 @@ Sigil.prototype.initCanvas = function() {
     sigil.bottomCtx = sigil.bottomScreen.getContext('2d');
 };
 
-Sigil.prototype.draw = function() 
+Sigil.prototype.draw = function()
 {
 
     console.log("Drawing");
@@ -125,13 +125,13 @@ Sigil.prototype.draw = function()
 Sigil.prototype.moveUp = function()
 {
     console.log("moving on up");
-    myThreeCanvas.player.moveForward();
+    myThreeCanvas.player.moveForward(myThreeCanvas.map.grid);
 };
 
 Sigil.prototype.moveDown = function()
 {
     console.log("turn down to what");
-    myThreeCanvas.player.moveBackward();
+    myThreeCanvas.player.moveBackward(myThreeCanvas.map.grid);
 };
 
 Sigil.prototype.moveLeft = function()
