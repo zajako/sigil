@@ -62,20 +62,20 @@ Player.prototype.moveBackward = function(grid){
 };
 
 Player.prototype.turnLeft = function(){
-    if(this.rotY - Math.PI / 2 <= Math.PI * -2){
-        this.rotY = 0;
-    }
-    else{
-        this.rotY -= Math.PI / 2;
-    }
-};
-
-Player.prototype.turnRight = function(){
     if(this.rotY + Math.PI / 2 >= Math.PI * 2){
         this.rotY = 0;
     }
     else{
         this.rotY += Math.PI / 2;
+    }
+};
+
+Player.prototype.turnRight = function(){
+    if(this.rotY - Math.PI / 2 <= Math.PI * -2){
+        this.rotY = 0;
+    }
+    else{
+        this.rotY -= Math.PI / 2;
     }
 };
 
@@ -205,10 +205,10 @@ $("body").keypress(function(event){
             myThreeCanvas.player.moveBackward(myThreeCanvas.map.grid);
             break;
         case 100:
-            myThreeCanvas.player.turnLeft();
+            myThreeCanvas.player.turnRight();
             break;
         case 97:
-            myThreeCanvas.player.turnRight();
+            myThreeCanvas.player.turnLeft();
             break;
     }
 });
