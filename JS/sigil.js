@@ -1,4 +1,4 @@
-var _isDown, _spellForms, _r, _g, _rc;
+var _isDown, _spellForms, _r, _g, _rc, _cForm, _skiper;
 
 function Sigil(){
     sigil = this;
@@ -7,16 +7,17 @@ function Sigil(){
     sigil.drawObjects = [];
     _spellForms = [];
     sigil.material = blood;
+    _cForm = 0;
+    _skiper = 0;
 
     sigil.init();
-    setInterval(function(){
-        sigil.draw();
-    },5000);
+    // setInterval(function(){
+    //     sigil.draw();
+    // },5000);
 }
 
 Sigil.prototype.init = function() {
     sigil.initCanvas();
-    sigil.initContext();
     sigil.initGUI();
     sigil.initDollar();
     sigil.draw();
@@ -26,7 +27,6 @@ Sigil.prototype.initGUI = function() {
 
     var bg = new cButton('./IMG/lowerscreen.png', 0, 0, 800, 450, false);
     sigil.drawObjects.push(bg);
-
 
     var btnDown = new cButton('./IMG/buttons/arrowDown.png', 675, 390, 51, 51, true);
     btnDown.addFunction("sigil.moveDown");
@@ -55,6 +55,12 @@ Sigil.prototype.initGUI = function() {
     var btnmercury = new cButton('./IMG/buttons/mercuryvial.png', 670, 165, 90, 80, true);
     btnmercury.addFunction("sigil.selectMercury");
     sigil.drawObjects.push(btnmercury);
+
+    var btngold = new cButton('./IMG/buttons/GoldPowderPile.png', 670, 245, 90, 80, true);
+    btngold.addFunction("sigil.selectGold");
+    sigil.drawObjects.push(btngold);
+
+
 };
 
 Sigil.prototype.initCanvas = function() {
@@ -75,31 +81,15 @@ Sigil.prototype.initCanvas = function() {
 
         });
     }, false);
-};
 
-Sigil.prototype.initContext = function() {
     sigil.bottomCtx = sigil.bottomScreen.getContext('2d');
 };
 
 Sigil.prototype.draw = function() 
 {
-    console.log("Drawing");
 
-    for(var i=0; i < _spellForms.length; i++)
-    {
-        var skipper = 0;
-        var previous_point = {x: 0, y: 0};
-        for(var i2=0; i2 < _spellForms[i].points.length; i2++)
-        {
-            if(previous_point.x != _spellForms[i].points[i2].X && previous_point.y != _spellForms[i].points[i2].Y)
-            {
-                var point = new spellPoint(_spellForms[i].material.image, _spellForms[i].points[i2].X, _spellForms[i].points[i2].Y, _spellForms[i].material.width, _spellForms[i].material.height, _spellForms[i].points[i2].R);
-                sigil.drawObjects.push(point);
-                previous_point.x = _spellForms[i].points[i2].X;
-                previous_point.y = _spellForms[i].points[i2].Y;
-            }
-        }
-    }
+    console.log("Drawing");
+    sigil.bottomCtx.clearRect(0, 0, sigil.width, sigil.height);
 
     $.each(sigil.drawObjects, function( index, object )
     {
@@ -112,6 +102,22 @@ Sigil.prototype.draw = function()
             sigil.bottomCtx.drawImage(object.image, object.x, object.y, object.width, object.height);
         }
     });
+
+    for(var i=0; i < _spellForms.length; i++)
+    {
+        var skipper = 0;
+        var previous_point = {x: 0, y: 0};
+        for(var i2=0; i2 < _spellForms[i].points.length; i2++)
+        {
+            var point = new spellPoint(_spellForms[i].material.image, _spellForms[i].points[i2].X, _spellForms[i].points[i2].Y, _spellForms[i].material.width, _spellForms[i].material.height, _spellForms[i].points[i2].R);
+            // sigil.drawObjects.push(point);
+
+
+            drawRotatedImage(point.image, point.x, point.y, point.image.rotate)
+        }
+    }
+
+    
 
     
 };
@@ -158,57 +164,91 @@ Sigil.prototype.selectMercury = function()
     sigil.material = mercury;
 };
 
+Sigil.prototype.selectGold = function()
+{
+    console.log("Gold Selected");
+    sigil.material = gold;
+};
+
 //Dollar Integration
-Sigil.prototype.initDollar = function() {
+Sigil.prototype.initDollar = function()
+{
     _r = new DollarRecognizer();
     _rc = sigil.getCanvasRect(sigil.bottomScreen);
     _isDown = false;
     _points = [];
-    $(sigil.bottomScreen).mousedown(function(){
-      sigil.mouseDownEvent(event.pageX, event.pageY);
+    $(sigil.bottomScreen).mousedown(function()
+    {
+        sigil.mouseDownEvent(event.pageX, event.pageY, event.offsetX, event.offsetY);
     });
 
-    $(sigil.bottomScreen).mouseup(function(){
-      sigil.mouseUpEvent(event.pageX, event.pageY);
+    $(sigil.bottomScreen).mouseup(function()
+    {
+        sigil.mouseUpEvent(event.pageX, event.pageY);
     });
 
-    $(sigil.bottomScreen).mousemove(function(){
-      sigil.mouseMoveEvent(event.pageX, event.pageY);
+    $(sigil.bottomScreen).mousemove(function()
+    {
+        sigil.mouseMoveEvent(event.pageX, event.pageY);
     });
 }
 
-Sigil.prototype.mouseDownEvent = function(x, y)
-    {
-      document.onselectstart = function() { return false; } // disable drag-select
-      document.onmousedown = function() { return false; } // disable drag-select
+Sigil.prototype.mouseDownEvent = function(x, y, offX, offY)
+{
+    document.onselectstart = function() { return false; } // disable drag-select
+    document.onmousedown = function() { return false; } // disable drag-select
 
-      _isDown = true;
-      x -= _rc.x;
-      y -= _rc.y - sigil.getScrollY();
-      // if (_points.length > 0)
-      //   _g.clearRect(0, 0, _rc.width, _rc.height);
-      _points.length = 1; // clear
-      _points[0] = new Point(x, y);
-      console.log("Recording unistroke...");
+    var isButton = false;
+    $.each(sigil.drawObjects, function( index, object )
+    {
+        if(object.checkClick(offX, offY))
+        {
+            isButton = true;
+        }
+    });
+
+
+    if(!isButton)
+    {
+        _isDown = true;
+        x -= _rc.x;
+        y -= _rc.y - sigil.getScrollY();
+
+        // if(_spellForms.length >= 2)
+        // {
+        //     console.log("Spell Casted! ("+_spellForms[0].cast+", "+_spellForms[1].cast+", "+_spellForms[2].cast+")");
+        //     _spellForms = [];
+        // }
+
+        _cForm = _spellForms.length;
+        _spellForms[_cForm] = 1;
+        _spellForms[_cForm] = new spellForm(sigil.material);
+        _spellForms[_cForm].points[0] = new Point(x, y, 0);
+
+        console.log("Recording unistroke...");
     }
+}
 
 Sigil.prototype.mouseMoveEvent = function(x, y)
 {
     if (_isDown)
-      {
-        x -= _rc.x;
-        y -= _rc.y - sigil.getScrollY();
-        if(sigil.material.rotate > 0)
-            rotate = Math.floor((Math.random() * sigil.material.rotate) + 1);
-        else
-            rotate = 0;
-        _points[_points.length] = new Point(x, y, rotate); // append
-        // drawConnectedPoint(_points.length - 2, _points.length - 1);
+    {
+        // _skiper++;
+        // if(_skiper >= 2)
+        // {
+            x -= _rc.x;
+            y -= _rc.y - sigil.getScrollY();
+            if(sigil.material.rotate > 0)
+                rotate = Math.floor((Math.random() * sigil.material.rotate) + 1);
+            else
+                rotate = 0;
 
-        // sigil.draw();
-      }
-      
+            _spellForms[_cForm].points[_spellForms[_cForm].points.length] = new Point(x, y, rotate);
+            sigil.draw();
+            _skiper = 0;
+        // }
     }
+}
 
 Sigil.prototype.getScrollY = function()
 {
@@ -226,21 +266,32 @@ Sigil.prototype.getScrollY = function()
 }
 
 Sigil.prototype.mouseUpEvent = function(x, y)
+{
+    document.onselectstart = function() { return true; } // enable drag-select
+    document.onmousedown = function() { return true; } // enable drag-select
+    if(_isDown)
     {
-      document.onselectstart = function() { return true; } // enable drag-select
-      document.onmousedown = function() { return true; } // enable drag-select
-      if (_isDown)
-      {
         _isDown = false;
-        if (_points.length >= 10)
+        if (_spellForms[_cForm].points.length >= 10)
         {
-          var result = _r.Recognize(_points, false);
+            var points = _spellForms[_cForm].points.slice();
+
+            var result = _r.Recognize(points, false);
+
           console.log("Result: " + result.Name + " (" + round(result.Score,2) + ").");
 
+          _spellForms[_cForm].setSpellCast(result.Name, _cForm);
 
-          var i = _spellForms.length;
-          _spellForms[i] = new spellForm(sigil.material);
-          _spellForms[i].points = _points.slice();
+
+        if(_cForm >= 2)
+        {
+            console.log("Spell Casted! ("+_spellForms[_cForm].cast+")");
+            console.log("Spell Casted! ("+_spellForms[0].cast+", "+_spellForms[1].cast+", "+_spellForms[2].cast+")");
+            _spellForms = [];
+            _cForm = 0;
+        }
+          
+          // _spellForms[_cForm].points = _points.slice();
           sigil.draw();
         }
         else // fewer than 10 points were inputted
