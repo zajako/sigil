@@ -1,7 +1,3 @@
-
-
-
-
 function Sigil(){
     sigil = this;
     sigil.width = 800;
@@ -15,6 +11,22 @@ function Sigil(){
 }
 
 Sigil.prototype.init = function() {
+    this.initCanvas();
+    this.initContext();
+    this.drawBackground();
+};
+
+Sigil.prototype.initCanvas = function() {
+    this.bottomScreen = document.createElement('canvas');
+    this.bottomScreen.width  = this.width;
+    this.bottomScreen.height = this.height;
+};
+
+Sigil.prototype.initContext = function() {
+    this.bottomCtx = this.bottomScreen.getContext('2d');
+};
+
+Sigil.prototype.drawBackground = function() {
     sigil.initCanvas();
     sigil.initContext();
 
@@ -44,10 +56,7 @@ Sigil.prototype.init = function() {
 }
 
 Sigil.prototype.initCanvas = function() {
-    sigil.topScreen = document.createElement('canvas');
     sigil.bottomScreen = document.createElement('canvas');
-    sigil.topScreen.width  = sigil.width;
-    sigil.topScreen.height = sigil.height;
     sigil.bottomScreen.width  = sigil.width;
     sigil.bottomScreen.height = sigil.height;
 
@@ -67,23 +76,15 @@ Sigil.prototype.initCanvas = function() {
 };
 
 Sigil.prototype.initContext = function() {
-    sigil.topCtx = sigil.topScreen.getContext('2d');
     sigil.bottomCtx = sigil.bottomScreen.getContext('2d');
 };
 
 Sigil.prototype.draw = function() 
 {
-    sigil.topCtx.strokeStyle = 'red';
-    sigil.topCtx.lineWidth = 2;
-    sigil.topCtx.fillStyle = '#9ea7b8'
-    sigil.topCtx.fillRect(0,0,sigil.width, sigil.height);
-    sigil.topCtx.fill();
-
     $.each(sigil.drawObjects, function( index, object )
     {
         sigil.bottomCtx.drawImage(object.image, object.x, object.y, object.width, object.height);
     });
-
 };
 
 Sigil.prototype.moveUp = function() 
@@ -111,5 +112,6 @@ Sigil.prototype.test = function()
     console.log("Charcoal Selected");
 }
 
-var sigil = new Sigil();
-
+$().ready(function(){
+    var sigil = new Sigil();
+});
