@@ -80,21 +80,25 @@ Sigil.prototype.draw = function()
 Sigil.prototype.moveUp = function()
 {
     console.log("moving on up");
+    myThreeCanvas.player.moveForward();
 };
 
 Sigil.prototype.moveDown = function()
 {
     console.log("turn down to what");
+    myThreeCanvas.player.moveBackward();
 };
 
 Sigil.prototype.moveLeft = function()
 {
     console.log("to the left to the left");
+    myThreeCanvas.player.turnLeft();
 };
 
 Sigil.prototype.moveRight = function()
 {
     console.log("Right...");
+    myThreeCanvas.player.turnRight();
 };
 
 Sigil.prototype.test = function()
@@ -102,6 +106,4 @@ Sigil.prototype.test = function()
     console.log("Charcoal Selected");
 };
 
-$().ready(function(){
-    var sigil = new Sigil();
-});
+
