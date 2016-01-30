@@ -1,5 +1,8 @@
 var _isDown, _spellForms, _r, _g, _rc, _cForm, _skiper, _castFinished;
 
+var _currentHp, _maxHp;
+
+
 function Sigil(){
     sigil = this;
     sigil.width = 800;
@@ -60,6 +63,10 @@ Sigil.prototype.initGUI = function() {
     var btngold = new cButton('./IMG/buttons/GoldPowderPile.png', 670, 245, 90, 80, true);
     btngold.addFunction("sigil.selectGold");
     sigil.drawObjects.push(btngold);
+
+    var btnspellbook = new cButton('./IMG/buttons/tutorial_Icon.png', 20, 20, 107, 122, true);
+    btnspellbook.addFunction("sigil.showSpellbook");
+    sigil.drawObjects.push(btnspellbook);
 
 
 };
@@ -138,13 +145,13 @@ Sigil.prototype.moveDown = function()
 Sigil.prototype.moveLeft = function()
 {
     console.log("to the left to the left");
-    myThreeCanvas.player.turnLeft();
+    myThreeCanvas.player.setTurnLeft();
 };
 
 Sigil.prototype.moveRight = function()
 {
     console.log("Right...");
-    myThreeCanvas.player.turnRight();
+    myThreeCanvas.player.setTurnRight();
 };
 
 Sigil.prototype.selectBlood = function()
@@ -170,6 +177,20 @@ Sigil.prototype.selectGold = function()
     console.log("Gold Selected");
     sigil.material = gold;
 };
+
+Sigil.prototype.showSpellbook = function()
+{
+    console.log("Showing SpellBook");
+    if($('#spellbook').is(":visible"))
+    {
+        $('#spellbook').hide();
+    }
+    else
+    {
+        $('#spellbook').show();
+    }
+    
+}
 
 //Dollar Integration
 Sigil.prototype.initDollar = function()
