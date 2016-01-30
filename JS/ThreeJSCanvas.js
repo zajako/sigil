@@ -118,7 +118,7 @@ THREECanvas.prototype.init = function(){
         }
     }
     for(var k=0; k < 50; k++){
-        this.loadModelGeometry("./Models/candle2.json", new THREE.Vector3(getRandomArbitrary(-25, 25), getRandomArbitrary(1, 2), getRandomArbitrary(-25, 25)), new THREE.Vector3(0,0,0));
+        this.loadModelGeometry("./MODELS/candle2.json", new THREE.Vector3(getRandomArbitrary(-25, 25), getRandomArbitrary(1, 2), getRandomArbitrary(-25, 25)), new THREE.Vector3(0,0,0));
     }
 
     this.addMeshToScene(this.makeGeometry(THREE.BoxGeometry, 500, 500, 0.01), new THREE.MeshBasicMaterial({color: 0xffffff, map: this.textures[0]}), new THREE.Vector3(0, -2, 0), new THREE.Vector3(Math.PI / 2,0,0));
