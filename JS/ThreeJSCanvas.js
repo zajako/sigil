@@ -138,7 +138,8 @@ THREECanvas.prototype.init = function(){
             }
         }
     }
-    this.addParticleSystem('Fire', 1500, 0xffffff, 0.1, new THREE.Vector3(this.player.x, 1, this.player.z));
+    this.addParticleSystem({name: 'Fire', maxParticles: 1500, color: 0x00ff00, size: 2, position: new THREE.Vector3(this.player.x, 1, this.player.z)});
+    // this.addParticleSystem('Fire', 1500, 0xffffff, 0.1, new THREE.Vector3(this.player.x, 1, this.player.z));
     // for(var k=0; k < 50; k++){
     //     this.loadModelGeometry("./MODELS/candle2.json", new THREE.Vector3(getRandomArbitrary(-25, 25), getRandomArbitrary(1, 2), getRandomArbitrary(-25, 25)), new THREE.Vector3(0,0,0));
     // }
@@ -154,35 +155,40 @@ THREECanvas.prototype.addWallSegment = function(x, y){
     this.addMeshToScene(this.makeGeometry(THREE.BoxGeometry, 5, 5, 5), new THREE.MeshBasicMaterial({color: 0xffffff, map: this.textures[1]}), new THREE.Vector3(x * 5, 0.5, y * 5), new THREE.Vector3(0,0,0));
 };
 
-THREECanvas.prototype.addParticleSystem = function(name, particleCount, color, size, position){
+THREECanvas.prototype.spawnPlayerProjectile = function(element, accent, targets){
+
+};
+
+THREECanvas.prototype.addParticleSystem = function(args){
     var particleSystem = new THREE.GPUParticleSystem({
-        maxParticles: 50000
-      });
-      this.scene.add( particleSystem);
-      this.particleSystems.push(particleSystem);
+        maxParticles: args.maxParticles ? args.maxParticles : 50000
+    });
+    particleSystem.name = args.name ? args.name : "newParticleSystem";
+    this.scene.add( particleSystem);
+    this.particleSystems.push(particleSystem);
 
-      // options passed during each spawned
-      options = {
-        position: new THREE.Vector3(0, 0, 0),
-        positionRandomness: .5,
-        velocity: new THREE.Vector3(0, 0, 0),
-        velocityRandomness: 0,
-        color: 0xff8000,
-        colorRandomness: .3,
-        turbulence: 0,
-        lifetime: 2,
-        size: 3,
-        sizeRandomness: 1
-      };
+    // options passed during each spawned
+    options = {
+        position: args.position ? args.position : new THREE.Vector3(0,0,0),
+        positionRandomness: args.positionRandomness ? args.positionRandomness : .3,
+        velocity: args.velocity ? args.velocity : new THREE.Vector3(0,0,0),
+        velocityRandomness: args.velocityRandomness ? args.velocityRandomness : .1,
+        color: args.color ? args.color : 0xffffff,
+        colorRandomness: args.colorRandomness ? args.colorRandomness : .3,
+        turbulence: args.turbulence ? args.turbulence : .1,
+        lifetime: args.lifetime ? args.lifetime : 1,
+        size: args.size ? args.size : 1,
+        sizeRandomness: args.sizeRandomness ? args.sizeRandomness : 1
+    };
 
-      spawnerOptions = {
-        spawnRate: 5000,
-        horizontalSpeed: 0,
-        verticalSpeed: 0,
-        timeScale: 1
-      };
+    spawnerOptions = {
+        spawnRate: args.spawnRate ? args.spawnRate : 5000,
+        horizontalSpeed: args.horizontalSpeed ? args.horizontalSpeed : 0,
+        verticalSpeed: args.verticalSpeed ? args.verticalSpeed : 0,
+        timeScale: args.timeScale ? args.timeScale : 1
+    };
 
-      this.scene.add(particleSystem);
+    this.scene.add(particleSystem);
 };
 
 THREECanvas.prototype.makeGeometry = function(geoType, width, height, depth){
@@ -281,9 +287,9 @@ function update()
     if (tick < 0) tick = 0;
 
     if (delta > 0) {
-        options.position.x = Math.sin(tick * spawnerOptions.horizontalSpeed) * 20;
-        options.position.y = Math.sin(tick * spawnerOptions.verticalSpeed) * 10;
-        options.position.z = Math.sin(tick * spawnerOptions.horizontalSpeed + spawnerOptions.verticalSpeed) * 5;
+        options.position.x = options.position.x;//Math.sin(tick * spawnerOptions.horizontalSpeed) * 20;
+        options.position.y = options.position.y;//Math.sin(tick * spawnerOptions.verticalSpeed) * 10;
+        options.position.z = options.position.z;//Math.sin(tick * spawnerOptions.horizontalSpeed + spawnerOptions.verticalSpeed) * 5;
 
         for (var x = 0; x < spawnerOptions.spawnRate * delta; x++) {
           // Yep, that's really it.  Spawning particles is super cheap, and once you spawn them, the rest of
