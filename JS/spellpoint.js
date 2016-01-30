@@ -13,13 +13,11 @@ function spellPoint(url, x, y, w, h, rotate)
     this.bottom = y + h;
 
     this.image = new Image();
-    this.image.src = url;
     this.image.rotate = rotate;
     this.image.onload = function() {
         // sigil.draw();
     }
-
-
+    this.image.src = url;
 }
 
 spellPoint.prototype.checkClick = function(x, y)

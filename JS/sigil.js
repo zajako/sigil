@@ -1,22 +1,17 @@
-var _isDown, _points, _points2, _points3, _points4, _r, _g, _rc;
+var _isDown, _spellForms, _r, _g, _rc;
 
 function Sigil(){
     sigil = this;
     sigil.width = 800;
     sigil.height = 450;
     sigil.drawObjects = [];
-    sigil.init();
     _spellForms = [];
     sigil.material = blood;
 
-
-    _points4 = [];
-    _points3 = [];
-    _points2 = [];
-
+    sigil.init();
     setInterval(function(){
         sigil.draw();
-    },200);
+    },5000);
 }
 
 Sigil.prototype.init = function() {
@@ -24,6 +19,7 @@ Sigil.prototype.init = function() {
     sigil.initContext();
     sigil.initGUI();
     sigil.initDollar();
+    sigil.draw();
 };
 
 Sigil.prototype.initGUI = function() {
@@ -87,6 +83,8 @@ Sigil.prototype.initContext = function() {
 
 Sigil.prototype.draw = function() 
 {
+    console.log("Drawing");
+
     for(var i=0; i < _spellForms.length; i++)
     {
         var skipper = 0;
@@ -206,7 +204,10 @@ Sigil.prototype.mouseMoveEvent = function(x, y)
             rotate = 0;
         _points[_points.length] = new Point(x, y, rotate); // append
         // drawConnectedPoint(_points.length - 2, _points.length - 1);
+
+        // sigil.draw();
       }
+      
     }
 
 Sigil.prototype.getScrollY = function()
@@ -220,6 +221,7 @@ Sigil.prototype.getScrollY = function()
   {
     scrollY = window.pageYOffset; // FF
   }
+
   return scrollY;
 }
 
@@ -239,14 +241,14 @@ Sigil.prototype.mouseUpEvent = function(x, y)
           var i = _spellForms.length;
           _spellForms[i] = new spellForm(sigil.material);
           _spellForms[i].points = _points.slice();
-
+          sigil.draw();
         }
         else // fewer than 10 points were inputted
         {
           console.log("Too few points made. Please try again.");
         }
       }
-    
+        
 
 
 
