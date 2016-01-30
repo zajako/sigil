@@ -5,6 +5,7 @@ function spellForm(material)
     this.cast = "";
     this.slot = 0;
     this.spellid = 0;
+    this.finished = false;
 
 }
 

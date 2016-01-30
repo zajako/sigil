@@ -1,4 +1,4 @@
-var _isDown, _spellForms, _r, _g, _rc, _cForm, _skiper;
+var _isDown, _spellForms, _r, _g, _rc, _cForm, _skiper, _castFinished;
 
 function Sigil(){
     sigil = this;
@@ -9,6 +9,7 @@ function Sigil(){
     sigil.material = blood;
     _cForm = 0;
     _skiper = 0;
+    _castFinished = false;
 
     sigil.init();
     // setInterval(function(){
@@ -303,15 +304,83 @@ Sigil.prototype.mouseUpEvent = function(x, y)
 Sigil.prototype.castSpell = function()
 {
     
+    var formsfinished = 0;
 
+    for(var i=0; i < _spellForms.length; i++)
+    {
+        var dotsfinished = 0;
 
+        for(var i2=0; i2 < _spellForms[i].points.length; i2++)
+        {
+            if(lerpVector2(_spellForms[i].points[i2], 400, 0))
+            {
+                dotsfinished += 1;
+                console.log("dotsFinished = "+dotsfinished+"/"+_spellForms[i].points.length);
+            }
+        }
+        if(dotsfinished >= _spellForms[i].points.length)
+        {
+            formsfinished += 1;
+            console.log("formsFinished = "+formsfinished+"/"+_spellForms.length);
+        }
+    }
 
+    if(formsfinished >= _spellForms.length)
+    {
+        _castFinished = true;
+    }
 
+    sigil.draw();
 
-     _spellForms = [];
-    _cForm = 0;
+    if(_castFinished)
+    {
+        console.log("Cast Finished.");
+        _spellForms = [];
+        _cForm = 0;
+        sigil.draw();
+        _castFinished = false;
 
+        myThreeCanvas.sendSpell(_spellForms[0].cast, _spellForms[1].cast, _spellForms[2].cast);
+    }
+    else
+    {
+        setTimeout(function(){
+            sigil.castSpell();
+        },50);
+    }
+}
+
+function lerpVector2(current, desiredx, desiredy)
+{
+    xtrue = false;
+    ytrue = false;
     
+    var acceptableX = false;
+    var acceptableY = false;
+
+    if((current.X >= desiredx - 3) && (current.X <= desiredx + 3))
+    {
+        acceptableX = true;
+    }
+    else
+    {
+        current.X += (desiredx - current.X) * 0.3;
+    }
+
+    if((current.Y>= desiredy - 3) && (current.Y <= desiredy + 3))
+    {
+        acceptableY = true;
+    }
+    else
+    {
+        current.Y += (desiredy - current.Y) * 0.3;
+    }
+    
+    if(acceptableX && acceptableY)
+        return true;
+    else
+        return false;
+
 }
 
 
