@@ -39,7 +39,7 @@ Player.prototype.turnLeft = function(){
         this.rotY = 0;
     }
     else{
-        this.rotY += Math.PI / 2;
+        this.rotY -= Math.PI / 2;
     }
 };
 
@@ -48,7 +48,7 @@ Player.prototype.turnRight = function(){
         this.rotY = 0;
     }
     else{
-        this.rotY -= Math.PI / 2;
+        this.rotY += Math.PI / 2;
     }
 };
 

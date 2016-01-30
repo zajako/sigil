@@ -11,19 +11,9 @@ function Sigil(){
 }
 
 Sigil.prototype.init = function() {
-    this.initCanvas();
-    this.initContext();
-    this.drawBackground();
-};
-
-Sigil.prototype.initCanvas = function() {
-    this.bottomScreen = document.createElement('canvas');
-    this.bottomScreen.width  = this.width;
-    this.bottomScreen.height = this.height;
-};
-
-Sigil.prototype.initContext = function() {
-    this.bottomCtx = this.bottomScreen.getContext('2d');
+    sigil.initCanvas();
+    sigil.initContext();
+    sigil.drawBackground();
 };
 
 Sigil.prototype.drawBackground = function() {
@@ -53,7 +43,7 @@ Sigil.prototype.drawBackground = function() {
     var matcharcoal = new cButton('./IMG/mat_charcoal.png', 670, 20, 108, 74, true);
     matcharcoal.addFunction("sigil.test");
     sigil.drawObjects.push(matcharcoal);
-}
+};
 
 Sigil.prototype.initCanvas = function() {
     sigil.bottomScreen = document.createElement('canvas');
@@ -87,30 +77,30 @@ Sigil.prototype.draw = function()
     });
 };
 
-Sigil.prototype.moveUp = function() 
+Sigil.prototype.moveUp = function()
 {
     console.log("moving on up");
-}
+};
 
-Sigil.prototype.moveDown = function() 
+Sigil.prototype.moveDown = function()
 {
     console.log("turn down to what");
-}
+};
 
-Sigil.prototype.moveLeft = function() 
+Sigil.prototype.moveLeft = function()
 {
     console.log("to the left to the left");
-}
+};
 
-Sigil.prototype.moveRight = function() 
+Sigil.prototype.moveRight = function()
 {
     console.log("Right...");
-}
+};
 
-Sigil.prototype.test = function() 
+Sigil.prototype.test = function()
 {
     console.log("Charcoal Selected");
-}
+};
 
 $().ready(function(){
     var sigil = new Sigil();
