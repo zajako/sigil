@@ -51,7 +51,7 @@ Sigil.prototype.initCanvas = function() {
     sigil.bottomScreen.height = sigil.height;
 
     sigil.bottomScreen.addEventListener('click', function(e) {
-        console.log('click: ' + e.offsetX + '/' + e.offsetY);
+        // console.log('click: ' + e.offsetX + '/' + e.offsetY);
 
         $.each(sigil.drawObjects, function( index, object )
         {
