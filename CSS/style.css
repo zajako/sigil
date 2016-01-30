@@ -1,0 +1,17 @@
+#spellbook
+{
+	display:none;
+	position: absolute;
+	left: 5px;
+	top: 5px;
+}
+
+#healthbar
+{
+	position: absolute;
+	left: 5px;
+	top: 5px;
+	width: 257px;
+	height: 52px;
+	background-image: url('../IMG/UI/HealthbarOuter.png');
+}
