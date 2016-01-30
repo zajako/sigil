@@ -168,6 +168,7 @@ function DollarRecognizer() // constructor
 		}
 		return (u == -1) ? new Result("No match.", 0.0) : new Result(this.Unistrokes[u].Name, useProtractor ? 1.0 / b : 1.0 - b / HalfDiagonal);
 	};
+	
 	this.AddGesture = function(name, points)
 	{
 		this.Unistrokes[this.Unistrokes.length] = new Unistroke(name, points); // append new unistroke
