@@ -1,6 +1,15 @@
 var clock = new THREE.Clock();
 var options, spawnerOptions, tick = 0;
 
+function Projectile(position, mesh){
+   this.position = position;
+   this.mesh = mesh;
+}
+
+Projectile.prototype.getGridPosition = function(){
+    return {x: this.position.x * 5, y: this.position.y, z: this.position.z * 5};
+};
+
 function Player(grid){
     this.x = 0;
     this.z = 0;
@@ -114,6 +123,7 @@ function THREECanvas(){
     this.meshes = [];
     this.textures = [];
     this.enemies = [];
+    this.projectiles = [];
     this.particleSystems = [];
 
     this.init();
@@ -143,7 +153,7 @@ THREECanvas.prototype.init = function(){
     // for(var k=0; k < 50; k++){
     //     this.loadModelGeometry("./MODELS/candle2.json", new THREE.Vector3(getRandomArbitrary(-25, 25), getRandomArbitrary(1, 2), getRandomArbitrary(-25, 25)), new THREE.Vector3(0,0,0));
     // }
-    this.loadModelGeometry("./MODELS/Dummy.json", new THREE.Vector3(this.player.x,-1.5,this.player.z), new THREE.Vector3(0,0,0), new THREE.MeshBasicMaterial({color: 0xffffff, map: this.textures[2]}), true);
+    this.loadModelGeometry("./MODELS/Dummy.json", new THREE.Vector3(this.player.x,-1.5,this.player.z), new THREE.Vector3(0,0,0), new THREE.MeshBasicMaterial({color: 0xffffff, map: this.textures[2]}), "enemy");
     this.addMeshToScene(this.makeGeometry(THREE.BoxGeometry, 500, 500, 0.01), new THREE.MeshBasicMaterial({color: 0xffffff, map: this.textures[0]}), new THREE.Vector3(0, -2, 0), new THREE.Vector3(Math.PI / 2,0,0));
 };
 
@@ -156,7 +166,10 @@ THREECanvas.prototype.addWallSegment = function(x, y){
 };
 
 THREECanvas.prototype.spawnPlayerProjectile = function(element, accent, targets){
-
+    for(var i=0; i < targets.length;i++){
+        this.addMeshToScene(this.makeGeometry(THREE.SphereGeometry, 5, 32, 32), new THREE.MeshBasicMaterial({color: 0x00ff00}), new THREE.Vector3(self.player.x, 0, self.player.z), new THREE.Vector3(0,0,0), "projectile");
+        var proj = new Projectile({x: this.player.gridX, y: 1, z: this.player.gridZ}, this.projectiles[this.projectiles.length - 1]);
+    }
 };
 
 THREECanvas.prototype.addParticleSystem = function(args){
@@ -170,13 +183,13 @@ THREECanvas.prototype.addParticleSystem = function(args){
     // options passed during each spawned
     options = {
         position: args.position ? args.position : new THREE.Vector3(0,0,0),
-        positionRandomness: args.positionRandomness ? args.positionRandomness : .3,
+        positionRandomness: args.positionRandomness ? args.positionRandomness : 0,
         velocity: args.velocity ? args.velocity : new THREE.Vector3(0,0,0),
-        velocityRandomness: args.velocityRandomness ? args.velocityRandomness : .1,
+        velocityRandomness: args.velocityRandomness ? args.velocityRandomness : 0,
         color: args.color ? args.color : 0xffffff,
         colorRandomness: args.colorRandomness ? args.colorRandomness : .3,
-        turbulence: args.turbulence ? args.turbulence : .1,
-        lifetime: args.lifetime ? args.lifetime : 1,
+        turbulence: args.turbulence ? args.turbulence : 0,
+        lifetime: args.lifetime ? args.lifetime : 2,
         size: args.size ? args.size : 1,
         sizeRandomness: args.sizeRandomness ? args.sizeRandomness : 1
     };
@@ -196,7 +209,7 @@ THREECanvas.prototype.makeGeometry = function(geoType, width, height, depth){
     return geo;
 };
 
-THREECanvas.prototype.addMeshToScene = function(geo, material, position, rotation, isEnemy){
+THREECanvas.prototype.addMeshToScene = function(geo, material, position, rotation, type){
     var mesh;
     if(material !== undefined){
         mesh = new THREE.Mesh(geo, material);
@@ -212,9 +225,14 @@ THREECanvas.prototype.addMeshToScene = function(geo, material, position, rotatio
         mesh.rotation.set(rotation.x, rotation.y, rotation.z);
     }
     this.scene.add(mesh);
-    this.meshes.push(mesh);
-    if(isEnemy){
+    if(type == "enemy"){
         this.enemies.push(mesh);
+    }
+    else if(type == "projectile"){
+        this.projectiles.push(mesh);
+    }
+    else{
+        this.meshes.push(mesh);
     }
 };
 
@@ -234,10 +252,10 @@ THREECanvas.prototype.loadTexture = function(name, repeatX, repeatY){
     this.textures.push(texture);
 };
 
-THREECanvas.prototype.loadModelGeometry = function(pathName, position, rotation, material, isEnemy){
+THREECanvas.prototype.loadModelGeometry = function(pathName, position, rotation, material, type){
     var myCanvas = this;
     var test = this.loader.load(pathName, function(geometry){
-        myCanvas.addMeshToScene(geometry, material === undefined ? myCanvas.materials[0] : material, position, rotation, isEnemy);
+        myCanvas.addMeshToScene(geometry, material === undefined ? myCanvas.materials[0] : material, position, rotation, type);
     });
 };
 
@@ -252,6 +270,10 @@ THREECanvas.prototype.updatePosition = function(){
 THREECanvas.prototype.updateRotation = function(deltaTime){
     this.player.lerpRotation(deltaTime);
     this.camera.rotation.set(0,this.player.rotY,0);
+};
+
+THREECanvas.prototype.processTurn = function(){
+
 };
 
 $().ready(function(){
@@ -278,9 +300,9 @@ function update()
     myThreeCanvas.render();
     myThreeCanvas.updatePosition();
     myThreeCanvas.updateRotation(deltaTime);
-    for(var i=0; i < myThreeCanvas.enemies.length; i++){
-        myThreeCanvas.enemies[i].rotateY();
-    }
+    // for(var i=0; i < myThreeCanvas.enemies.length; i++){
+    //     myThreeCanvas.enemies[i].position;
+    // }
     var delta = clock.getDelta() * spawnerOptions.timeScale;
     tick += delta;
 
