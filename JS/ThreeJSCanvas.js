@@ -1,32 +1,33 @@
-function Player(){
+function Player(grid){
     this.x = 0;
     this.z = 0;
     this.gridX = 0;
     this.gridZ = 0;
     this.rotY = 0;
+    this.grid = grid;
 }
 
-Player.prototype.moveForward = function(grid){
+Player.prototype.moveForward = function(){
     if(this.rotY === 0){
-        if(grid[this.gridZ - 1][this.gridX] !== 0){
+        if(this.grid[this.gridZ - 1][this.gridX] !== 0){
             this.z -= 5;
             this.gridZ -= 1;
         }
     }
     else if(this.rotY == Math.PI / 2 || this.rotY == (-3 * Math.PI / 2)){
-        if(grid[this.gridZ][this.gridX - 1] !== 0){
+        if(this.grid[this.gridZ][this.gridX - 1] !== 0){
             this.x -= 5;
             this.gridX -= 1;
         }
     }
     else if(this.rotY == (3 * Math.PI / 2) || this.rotY == -Math.PI / 2){
-        if(grid[this.gridZ][this.gridX + 1] !== 0){
+        if(this.grid[this.gridZ][this.gridX + 1] !== 0){
             this.x += 5;
             this.gridX += 1;
         }
     }
     else if(this.rotY == Math.PI || this.rotY == -Math.PI){
-        if(grid[this.gridZ + 1][this.gridX] !== 0){
+        if(this.grid[this.gridZ + 1][this.gridX] !== 0){
             this.z += 5;
             this.gridZ += 1;
         }
@@ -35,25 +36,25 @@ Player.prototype.moveForward = function(grid){
 
 Player.prototype.moveBackward = function(grid){
     if(this.rotY === 0){
-        if(grid[this.gridZ + 1][this.gridX] !== 0){
+        if(this.grid[this.gridZ + 1][this.gridX] !== 0){
             this.z += 5;
             this.gridZ += 1;
         }
     }
     else if(this.rotY == Math.PI / 2 || this.rotY == (-3 * Math.PI / 2)){
-        if(grid[this.gridZ][this.gridX + 1] !== 0){
+        if(this.grid[this.gridZ][this.gridX + 1] !== 0){
             this.x += 5;
             this.gridX += 1;
         }
     }
     else if(this.rotY == (3 * Math.PI / 2) || this.rotY == -Math.PI / 2){
-        if(grid[this.gridZ][this.gridX - 1] !== 0){
+        if(this.grid[this.gridZ][this.gridX - 1] !== 0){
             this.x -= 5;
             this.gridX -= 1;
         }
     }
     else if(this.rotY == Math.PI || this.rotY == -Math.PI){
-        if(grid[this.gridZ - 1][this.gridX] !== 0){
+        if(this.grid[this.gridZ - 1][this.gridX] !== 0){
             this.z -= 5;
             this.gridZ -= 1;
         }
@@ -84,8 +85,8 @@ function THREECanvas(){
 
     this.needupdate = true;
 
-    this.player = new Player();
     this.map = new Map();
+    this.player = new Player(this.map.grid);
 
     this.scene = new THREE.Scene();
     this.camera = new THREE.PerspectiveCamera( 45, this.width / this.height, 0.1, 1000 );

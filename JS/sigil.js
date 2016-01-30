@@ -125,13 +125,13 @@ Sigil.prototype.draw = function()
 Sigil.prototype.moveUp = function()
 {
     console.log("moving on up");
-    myThreeCanvas.player.moveForward(myThreeCanvas.map.grid);
+    myThreeCanvas.player.moveForward();
 };
 
 Sigil.prototype.moveDown = function()
 {
     console.log("turn down to what");
-    myThreeCanvas.player.moveBackward(myThreeCanvas.map.grid);
+    myThreeCanvas.player.moveBackward();
 };
 
 Sigil.prototype.moveLeft = function()
