@@ -366,6 +366,14 @@ Sigil.prototype.castSpell = function()
         _castFinished = false;
 
         myThreeCanvas.sendSpell(_spellForms[0].cast, _spellForms[1].cast, _spellForms[2].cast);
+
+        var spell = new Spell(_spellForms[0].cast, _spellForms[0].cast, "ball", "");
+        var spell2 = new Spell(_spellForms[1].cast, _spellForms[1].cast, "ball", "");
+        var spell3 = new Spell(_spellForms[2].cast, _spellForms[2].cast, "ball", "");
+
+        spell.cast();
+        spell.cast2();
+        spell.cast3();
     }
     else
     {
