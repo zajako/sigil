@@ -247,5 +247,5 @@ var monsterTypeEnum = {
 	"s" : "skel",
 	"o" : "orc",
 	"g" : "goblin",
-	"d" : "dummy"
+	"d" : dummy
 };

@@ -96,9 +96,9 @@ THREECanvas.prototype.loadIn = function(){
                 this.player.gridX = j;
                 this.player.gridZ = i;
             }
-            if($.inArray(value, monsterTypeEnum) != -1)
+            if(monsterTypeEnum[value.toString()] !== undefined)
             {
-                this.spawnMonster(monsterTypeEnum[value], new THREE.Vector3(j * 5, -1.5, i * 5), 0);
+                this.spawnMonster(monsterTypeEnum[value.toString()], new THREE.Vector3(j * 5, -1.5, i * 5), new THREE.Vector3(0,0,0));
             }
         }
     }
@@ -276,7 +276,6 @@ THREECanvas.prototype.processParticles = function(delta, tick){
             for (var x = 0; x < spawnerOptions[i].spawnRate * delta; x++) {
               // Yep, that's really it.  Spawning particles is super cheap, and once you spawn them, the rest of
               // their lifecycle is handled entirely on the GPU, driven by a time uniform updated below
-              // myThreeCanvas.particleSystems[0].spawnParticle(options);
               myThreeCanvas.particleSystems[i].spawnParticle(options[i]);
             }
         }
