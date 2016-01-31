@@ -80,20 +80,25 @@ THREECanvas.prototype.loadIn = function(){
 //LoadWalls and floor
     for(var i=0; i < this.map.grid.length; i++){
         for(var j=0; j < this.map.grid[i].length; j++){
+            var value = this.map.grid[i][j];
             //I'm a wall segment
-            if(this.map.grid[i][j] === 0){
+            if(value === 0){
                 this.addWallSegment(j, i);
             }
             //I'm not!
-            if(this.map.grid[i][j] !== 0){
+            if(value !== 0){
                 this.addFloorSegment(j, i);
             }
             //I'm the player
-            if(this.map.grid[i][j] === 2){
+            if(value === 2){
                 this.player.x = j * 5;
                 this.player.z = i * 5;
                 this.player.gridX = j;
                 this.player.gridZ = i;
+            }
+            if($.inArray(value, monsterTypeEnum))
+            {
+                this.spawnMonster(monsterTypeEnum[value], value, 0);
             }
         }
     }
