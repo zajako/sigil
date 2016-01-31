@@ -1,9 +1,5 @@
 var clock = new THREE.Clock();
-var options, spawnerOptions, tick = 0;
-
-
-
-
+var options = [], spawnerOptions = [], tick = 0;
 
 function THREECanvas(){
     this.width = 800;
@@ -24,11 +20,10 @@ function THREECanvas(){
     this.materials = [new THREE.MeshBasicMaterial({color: 0xffffff, side: THREE.DoubleSide})];
     this.meshes = [];
     this.textures = [];
-    this.enemies = [];
-    this.projectiles = [];
+
+    this.elementEnum = {"fire" : 0, "water" : 1, "earth" : 2, "air" : 3};
     
     this.particleSystems = [];
-
 
     //Actual Non Mesh Information Storage 
     this.bullets = [];
@@ -41,18 +36,7 @@ THREECanvas.prototype.init = function(){
     this.renderer.setSize(this.width, this.height);
     document.body.appendChild( this.renderer.domElement );
 
-
-    this.loadIn()
-
-    this.addParticleSystem({name: 'Fire', maxParticles: 250000, spawnRate: 15000, color: 0xff6600, positionRandomness: .4, verticalSpeed: 1.33, horizontalSpeed: 1.5, velocity: new THREE.Vector3(0, 0, 0), size: 3, position: new THREE.Vector3(0, 0, 0), velocityRandomness: .2, lifetime: 3, turbulence: .05});
-    // this.addParticleSystem('Fire', 1500, 0xffffff, 0.1, new THREE.Vector3(this.player.x, 1, this.player.z));
-    // for(var k=0; k < 50; k++){
-    //     this.loadModelGeometry("./MODELS/candle2.json", new THREE.Vector3(getRandomArbitrary(-25, 25), getRandomArbitrary(1, 2), getRandomArbitrary(-25, 25)), new THREE.Vector3(0,0,0));
-    // }
-
-    //var proj = new Projectile({x: this.player.gridX, y: 1, z: this.player.gridZ}, this.projectiles[this.projectiles.length - 1]);
-
-    
+    this.loadIn();
 };
 
 function getRandomArbitrary(min, max) {
@@ -61,7 +45,7 @@ function getRandomArbitrary(min, max) {
 
 THREECanvas.prototype.addWallSegment = function(x, y)
 {
-    var wall = Math.floor(Math.random() * 4 + 4);
+    var wall = Math.floor(Math.random() * 7 + 4);
 
     this.addMeshToScene(this.makeGeometry(THREE.BoxGeometry, 5, 5, 5), new THREE.MeshBasicMaterial({color: 0xffffff, map: this.textures[wall]}), new THREE.Vector3(x * 5, 0.5, y * 5), new THREE.Vector3(0,0,0));
 };
@@ -83,17 +67,28 @@ THREECanvas.prototype.loadIn = function(){
     this.loadTexture("./IMG/Textures/TempleWall2.png", 1, 1);
     this.loadTexture("./IMG/Textures/TempleWall3.png", 1, 1);
     this.loadTexture("./IMG/Textures/TempleWall4.png", 1, 1);
+    this.loadTexture("./IMG/Textures/TempleWall5.png", 1, 1);
+    this.loadTexture("./IMG/Textures/TempleWall6.png", 1, 1);
+    this.loadTexture("./IMG/Textures/TempleWall7.png", 1, 1);
     this.loadTexture("./IMG/Textures/DummyUVs_textured.png", 1, 1);
 
+//Particle Systems
+    this.addParticleSystem({name: 'fire', maxParticles: 75000, spawnRate: 12500, color: 0xff6600, positionRandomness: .3, verticalSpeed: 1.33, horizontalSpeed: 1.5, velocity: new THREE.Vector3(0, 0, 0), size: 15, position: new THREE.Vector3(-500, -5, -500), velocityRandomness: 0, lifetime: .1, turbulence: 0});
+    this.addParticleSystem({name: 'water', maxParticles: 75000, spawnRate: 12500, color: 0x33cbff, positionRandomness: .3, verticalSpeed: 1.33, horizontalSpeed: 1.5, velocity: new THREE.Vector3(0, 0, 0), size: 15, position: new THREE.Vector3(-500, -5, -500), velocityRandomness: 0, lifetime: .1, turbulence: 0});
+    this.addParticleSystem({name: 'earth', maxParticles: 75000, spawnRate: 12500, color: 0x734d26, positionRandomness: .3, verticalSpeed: 1.33, horizontalSpeed: 1.5, velocity: new THREE.Vector3(0, 0, 0), size: 15, position: new THREE.Vector3(-500, -5, -500), velocityRandomness: 0, lifetime: .1, turbulence: 0});
+    this.addParticleSystem({name: 'air', maxParticles: 75000, spawnRate: 12500, color: 0xd9d9d9, positionRandomness: .3, verticalSpeed: 1.33, horizontalSpeed: 1.5, velocity: new THREE.Vector3(0, 0, 0), size: 15, position: new THREE.Vector3(-500, -5, -500), velocityRandomness: 0, lifetime: .1, turbulence: 0});
 //LoadWalls and floor
     for(var i=0; i < this.map.grid.length; i++){
         for(var j=0; j < this.map.grid[i].length; j++){
+            //I'm a wall segment
             if(this.map.grid[i][j] === 0){
                 this.addWallSegment(j, i);
             }
+            //I'm not!
             if(this.map.grid[i][j] !== 0){
                 this.addFloorSegment(j, i);
             }
+            //I'm the player
             if(this.map.grid[i][j] === 2){
                 this.player.x = j * 5;
                 this.player.z = i * 5;
@@ -103,42 +98,49 @@ THREECanvas.prototype.loadIn = function(){
         }
     }
 
-//LoadGeometries
-    this.loadModelGeometry("./MODELS/Dummy.json", new THREE.Vector3(this.player.x,-1.5,this.player.z), new THREE.Vector3(0,0,0), new THREE.MeshBasicMaterial({color: 0xffffff, map: this.textures[8]}), "enemy");
+// LoadGeometries
+    this.spawnMonster(dummy, new THREE.Vector3(this.player.x, -1.5, this.player.z), new THREE.Vector3(0,0,0));
+};
+
+THREECanvas.prototype.spawnMonster = function(monsterType, position, rotation){
+    var myMonster = monsterType.clone();
+    var monsterMesh = this.loadModelGeometry(monsterType.modelPathName, position, rotation, new THREE.MeshBasicMaterial({color: 0xffffff, map: this.textures[monsterType.textureId]}));
+    myMonster.setMesh(monsterMesh);
+    this.monsters.push(myMonster);
 };
 
 THREECanvas.prototype.spawnPlayerProjectile = function(element, accent, targets, spell){
     // var projGroup = new Object3D();
     for(var i=0; i < targets.length;i++){
-        this.addMeshToScene(this.makeGeometry(THREE.SphereGeometry, .5, 16, 16), 
-            new THREE.MeshBasicMaterial({color: 0xffffff, transparent: true, opacity: .15}), 
-            new THREE.Vector3(this.player.x, 0, this.player.z), 
-            new THREE.Vector3(0,0,0), "projectile");
+        var myMesh = this.addMeshToScene(this.makeGeometry(THREE.SphereGeometry, 0.5,16,16),
+            new THREE.MeshBasicMaterial({color: 0xffffff, visible: false}),
+            new THREE.Vector3(this.player.x, 0.5, this.player.z),
+            new THREE.Vector3(0,0,0));
 
-
-        var proj = new Projectile({x: this.player.gridX, y: 1, z: this.player.gridZ}, this.projectiles[this.projectiles.length - 1]);
+        var proj = new Projectile({x: this.player.gridX, y: 1, z: this.player.gridZ}, myMesh, this.elementEnum[element]);
         proj.setSpell(spell);
 
         if(this.player.rotY === 0){
             if(this.player.grid[this.player.gridZ - 1][this.player.gridX] !== 0){
-                proj.addZ = -0.5;
+                proj.addZ = -0.1;
             }
         }
-        else if(this.player.rotY == radiansToDegrees(Math.PI / 2) || this.player.rotY == radiansToDegrees((-3 * Math.PI / 2))){
+        else if(this.player.rotY == 90 || this.player.rotY == -270){
             if(this.player.grid[this.player.gridZ][this.player.gridX - 1] !== 0){
-                proj.addX = -0.5;
+                proj.addX = -0.1;
             }
         }
-        else if(this.player.rotY == radiansToDegrees((3 * Math.PI / 2)) || this.player.rotY == radiansToDegrees(-Math.PI / 2)){
+        else if(this.player.rotY == 270 || this.player.rotY == -90){
             if(this.player.grid[this.player.gridZ][this.player.gridX + 1] !== 0){
-                proj.addX = 0.5;
+                proj.addX = 0.1;
             }
         }
-        else if(this.player.rotY == radiansToDegrees(Math.PI) || this.player.rotY == radiansToDegrees(-Math.PI)){
+        else if(this.player.rotY == 180 || this.player.rotY == -180){
             if(this.player.grid[this.player.gridZ + 1][this.player.gridX] !== 0){
-                proj.addZ = 0.5;
+                proj.addZ = 0.1;
             }
         }
+        // this.particleSystems[0].rotation.set(0,degreesToRadians(this.player.rotY),0);
         this.bullets.push(proj);
     }
 };
@@ -152,7 +154,7 @@ THREECanvas.prototype.addParticleSystem = function(args){
     this.particleSystems.push(particleSystem);
 
     // options passed during each spawned
-    options = {
+    var myOptions = {
         position: args.position ? args.position : new THREE.Vector3(0,0,0),
         positionRandomness: args.positionRandomness ? args.positionRandomness : 0,
         velocity: args.velocity ? args.velocity : new THREE.Vector3(0,0,0),
@@ -160,17 +162,21 @@ THREECanvas.prototype.addParticleSystem = function(args){
         color: args.color ? args.color : 0xffffff,
         colorRandomness: args.colorRandomness ? args.colorRandomness : .3,
         turbulence: args.turbulence ? args.turbulence : 0,
-        lifetime: args.lifetime ? args.lifetime : 2,
+        lifetime: args.lifetime ? args.lifetime : .5,
         size: args.size ? args.size : 1,
-        sizeRandomness: args.sizeRandomness ? args.sizeRandomness : 1
+        sizeRandomness: args.sizeRandomness ? args.sizeRandomness : 1,
+        smoothPosition: args.smoothPosition ? args.smoothPosition : true
     };
 
-    spawnerOptions = {
+    var mySpawnerOptions = {
         spawnRate: args.spawnRate ? args.spawnRate : 5000,
         horizontalSpeed: args.horizontalSpeed ? args.horizontalSpeed : 0,
         verticalSpeed: args.verticalSpeed ? args.verticalSpeed : 0,
         timeScale: args.timeScale ? args.timeScale : 1
     };
+
+    options.push(myOptions);
+    spawnerOptions.push(mySpawnerOptions);
 
     this.scene.add(particleSystem);
 };
@@ -200,22 +206,7 @@ THREECanvas.prototype.addMeshToScene = function(geo, material, position, rotatio
         mesh.rotation.set(rotation.x, rotation.y, rotation.z);
     }
     this.scene.add(mesh);
-    if(type == "enemy"){
-        var dummy1 = dummy.clone();
-        dummy1.setMesh(mesh);
-        this.monsters.push(dummy1);
-
-        // debugger;
-
-
-        this.enemies.push(mesh);
-    }
-    else if(type == "projectile"){
-        this.projectiles.push(mesh);
-    }
-    else{
-        this.meshes.push(mesh);
-    }
+    return mesh;
 };
 
 THREECanvas.prototype.addMaterial = function(color){
@@ -258,6 +249,37 @@ THREECanvas.prototype.processTurn = function(){
 
 };
 
+THREECanvas.prototype.processProjectiles = function(tick){
+    for(var k=0;k<this.bullets.length;k++){
+        this.bullets[k].mesh.position.x += this.bullets[k].addX;
+        this.bullets[k].mesh.position.z += this.bullets[k].addZ;
+
+        //Movement shenanigans
+        this.bullets[k].mesh.position.y = Math.sin(( 8 * tick) * degreesToRadians(45));
+
+        //Update the particle system 'options' position to the new bullet position. This is just an easy way to make sure
+        //particles are being spawned in the correct location
+        options[this.bullets[k].element].position.x = this.bullets[k].mesh.position.x;
+        options[this.bullets[k].element].position.y = this.bullets[k].mesh.position.y;
+        options[this.bullets[k].element].position.z = this.bullets[k].mesh.position.z;
+    }
+};
+
+THREECanvas.prototype.processParticles = function(delta, tick){
+    if (tick < 0) tick = 0;
+
+    if (delta > 0) {
+        for(var i=0;i< spawnerOptions.length;i++){
+            for (var x = 0; x < spawnerOptions[i].spawnRate * delta; x++) {
+              // Yep, that's really it.  Spawning particles is super cheap, and once you spawn them, the rest of
+              // their lifecycle is handled entirely on the GPU, driven by a time uniform updated below
+              // myThreeCanvas.particleSystems[0].spawnParticle(options);
+              myThreeCanvas.particleSystems[i].spawnParticle(options[i]);
+            }
+        }
+    }
+};
+
 $().ready(function(){
 $("body").keypress(function(event){
     switch(event.which){
@@ -284,92 +306,20 @@ function update()
     myThreeCanvas.render();
     myThreeCanvas.updatePosition();
     myThreeCanvas.updateRotation(deltaTime);
+
     // for(var i=0; i < myThreeCanvas.enemies.length; i++){
     //     myThreeCanvas.enemies[i].position;
     // }
-    var delta = clock.getDelta() * spawnerOptions.timeScale;
+    var delta = clock.getDelta() * spawnerOptions[0].timeScale;
     tick += delta;
 
-    if (tick < 0) tick = 0;
-
-    if (delta > 0) {
-        options.position.x = Math.sin(tick * spawnerOptions.horizontalSpeed) * 20;
-        options.position.y = Math.sin(tick * spawnerOptions.verticalSpeed) * 10;
-        options.position.z = Math.sin(tick * spawnerOptions.horizontalSpeed + spawnerOptions.verticalSpeed) * 5;
-
-        for (var x = 0; x < spawnerOptions.spawnRate * delta; x++) {
-          // Yep, that's really it.  Spawning particles is super cheap, and once you spawn them, the rest of
-          // their lifecycle is handled entirely on the GPU, driven by a time uniform updated below
-          myThreeCanvas.particleSystems[0].spawnParticle(options);
-        }
-    }
-
-
-
-
-
-    for (var x = 0; x < myThreeCanvas.bullets.length; x++)
-    {
-        myThreeCanvas.bullets[x].mesh.position.z += myThreeCanvas.bullets[x].addZ;
-        myThreeCanvas.bullets[x].mesh.position.x += myThreeCanvas.bullets[x].addX;
-
-
-        // debugger;
-        for (var x2 = 0; x2 < myThreeCanvas.monsters.length; x2++)
-        {
-           // debugger;
-            var differencez = myThreeCanvas.monsters[x2].mesh.position.z - myThreeCanvas.bullets[x].mesh.position.z;
-            var differencex = myThreeCanvas.monsters[x2].mesh.position.x - myThreeCanvas.bullets[x].mesh.position.x;
-            // debugger;
-            if((differencez > 0.01 || differencez < 0.01) && (differencex > 0.01 || differencex < 0.01))
-            {
-
-        //         for (var i = bullets.length-1; i >= 0; i--) {
-        // var b = bullets[i], p = b.position, d = b.ray.direction;
-        // if (checkWallCollision(p)) {
-        //     bullets.splice(i, 1);
-        //     scene.remove(b);
-        //     continue;
-        // }
-                
-                console.log("WE HIT THE JACKPOT!!");
-
-
-
-                myThreeCanvas.monsters[x2].onContact(myThreeCanvas.bullets[x].spell);
-
-                var b = myThreeCanvas.bullets[x].mesh;
-                myThreeCanvas.bullets.splice(x, 1);
-                myThreeCanvas.scene.remove(b);
-
-
-
-                continue;
-
-
-                // myThreeCanvas.scene.remove(myThreeCanvas.bullets[x].mesh);
-                // myThreeCanvas.scene.remove(myThreeCanvas.bullets[x]);
-                // myThreeCanvas.bullets[x] =  "";
-                // break;
-
-
-                // debugger;
-             
-
-
-
-            }
-            
-
-        }
-
-
-    }
-    
-    
-    
+    myThreeCanvas.processParticles(delta, tick);
+    myThreeCanvas.processProjectiles(tick);
 
     myThreeCanvas.particleSystems[0].update(tick);
+    myThreeCanvas.particleSystems[1].update(tick);
+    myThreeCanvas.particleSystems[2].update(tick);
+    myThreeCanvas.particleSystems[3].update(tick);
 
     requestAnimationFrame(update);
 }
