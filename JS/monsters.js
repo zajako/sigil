@@ -108,7 +108,7 @@ Monster.prototype.death = function()
 {
 	//Despawn Monster
 	console.log("Monster Has Died!");
-	myThreeCanvas.scene.remove(this);
+	myThreeCanvas.scene.remove(mesh);
 }
 
 //Monster(img, name, mind, body, spirit, melee, ranged)

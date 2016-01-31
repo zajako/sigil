@@ -25,19 +25,19 @@ Projectile.prototype.playSound = function()
 	{
 		if(this.spell.element == "fire")
 		{
-			source = 'http://sigil.nevernull.com/IMG/sounds/fire_spell1.mp3';
+			source = 'http://sigil.nevernull.com/IMG/sounds/fireMIXED.mp3';
 		}
-		else if(this.spell.element = "earth")
+		else if(this.spell.element = "air")
 		{
-			source = 'http://sigil.nevernull.com/IMG/sounds/earth_spell1.mp3';
-		}
-		else if(this.spell.element = "wind")
-		{
-			source = 'http://sigil.nevernull.com/IMG/sounds/air_spell1.mp3';
+			source = 'http://sigil.nevernull.com/IMG/sounds/airMIXED.mp3';
 		}
 		else if(this.spell.element = "water")
 		{
-			source = 'http://sigil.nevernull.com/IMG/sounds/water_spell1.mp3';
+			source = 'http://sigil.nevernull.com/IMG/sounds/waterMIXED.mp3';
+		}
+		else if(this.spell.element = "earth")
+		{
+			source = 'http://sigil.nevernull.com/IMG/sounds/earthMIXED.mp3';
 		}
 	}
 
