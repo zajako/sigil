@@ -5,6 +5,20 @@
 	left: 5px;
 	top: 5px;
 }
+#spellbook2
+{
+	display:none;
+	position: absolute;
+	left: 5px;
+	top: 5px;
+}
+#spellbook3
+{
+	display:none;
+	position: absolute;
+	left: 5px;
+	top: 5px;
+}
 
 #healthbar
 {
@@ -33,3 +47,77 @@
 {
 	background-color: #5f2216;
 }
+
+
+#enemybar
+{
+	display: none;
+	position: absolute;
+	left: 550px;
+	top: 5px;
+	width: 242px;
+	height: 43px;
+	background-image: url('../IMG/UI/monsterHealth.png');
+	padding-top: 9px;
+	padding-left: 10px;
+}
+
+#enemybarback
+{
+	display: none;
+	position: absolute;
+	left: 560px;
+	top: 16px;
+	width: 242px;
+	height: 43px;
+
+}
+
+#current_mind
+{
+	background-color: #5f2216;
+}
+
+#current_body
+{
+	background-color: #5f2216;
+}
+
+#current_spirit
+{
+	background-color: #5f2216;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+body
+  background-color: #000
+  overflow: hidden
+  font-family: "Helvetica Neue", sans-serif
+  
+.information
+  background-color: rgba(0,255,255, 0.35)
+  padding: 8px 8px
+  width: 30%
+    
+  .item
+    color: #eef
+    margin: 2px auto
+    
+    input
+      width: 45px
+    input, span
+      float: right
+      margin-right: 10px
+      color: #afa
+      background-color: transparent
+      border: none

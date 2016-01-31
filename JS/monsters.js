@@ -1,6 +1,22 @@
 
-function Monster(img, name, mind, body, spirit, melee, ranged)
+function Monster(img, name, mind, body, spirit, melee, ranged, spawncode)
 {
+
+//model pathname
+//texture id
+
+/*
+
+	for(var k=0; k < mobtypes.length; k++)
+            {
+                if(this.map.grid[i][j] == mobtypes[k].spawncode)
+                {
+                    
+                }
+            }
+
+*/
+
     this.image = img;
     this.name = name;
     this.mind = mind;
@@ -14,6 +30,7 @@ function Monster(img, name, mind, body, spirit, melee, ranged)
     this.current_mind = mind;
     this.current_body = body;
     this.current_spirit = spirit;
+    this.spawncode = spawncode;
 }
 
 Monster.prototype.clone = function()
@@ -104,66 +121,123 @@ Monster.prototype.onContact = function(spell)
 	// debugger;
 }
 
+Monster.prototype.search = function()
+{
+	if(myThreeCanvas.isPlayerInRange(this.mesh))
+	{
+		sigil.targetMonster(this);
+
+		if(myThreeCanvas.isPlayerInCloseRange(this.mesh))
+		{
+			if(this.melee > 0)
+				this.attack();
+		}
+		else
+		{
+			if(this.ranged > 0)
+				this.rangedAttack();
+		}
+	}
+}
+
+Monster.prototype.attack = function()
+{
+	if(Math.random() >= 0.8)
+	{
+		//play sound
+		sigil.takeDamage(this.melee);
+	}
+	
+}
+
+Monster.prototype.rangedAttack = function()
+{
+	if(Math.random() >= 0.4)
+	{
+		//play sound
+		sigil.takeDamage(this.ranged);
+	}
+}
+
 Monster.prototype.death = function()
 {
 	//Despawn Monster
 	console.log("Monster Has Died!");
-	myThreeCanvas.scene.remove(this);
+	myThreeCanvas.scene.remove(mesh);
+
+	sigil.cancelTarget(this);
 }
 
 //Monster(img, name, mind, body, spirit, melee, ranged)
-dummy = new Monster('', 'Training Dummy', -1, 100, -1, 0, 0);
+dummy = new Monster('', 'Training Dummy', -1, 100, -1, 0, 0, "d");
 dummy.setResist('water');
 dummy.setWeak('fire');
 
-goblin = new Monster('', 'Goblin', 25, 25, 50, 10, 10);
+goblin = new Monster('', 'Goblin', 25, 25, 50, 10, 10, "g");
 goblin.setResist('fire');
 goblin.setWeak('water');
 
-orc = new Monster('', 'Orc', 50, 75, 50, 30, 10);
+orc = new Monster('', 'Orc', 50, 75, 50, 30, 10, "o");
 orc.setResist('fire');
 orc.setWeak('water');
 
-skel = new Monster('', 'Skeleton', -1, 25, -1, 20, 0);
+skel = new Monster('', 'Skeleton', -1, 25, -1, 20, 0, "s");
 skel.setResist('water');
 skel.setWeak('fire');
 
-zombie = new Monster('', 'Zombie', -1, 50, -1, 10, 0);
+zombie = new Monster('', 'Zombie', -1, 50, -1, 10, 0, "z");
 zombie.setResist('water');
 zombie.setWeak('fire');
 
-wight = new Monster('', 'Wight', 25, 50, -1, 35, 0);
+wight = new Monster('', 'Wight', 25, 50, -1, 35, 0, "w");
 wight.setResist('water');
 wight.setWeak('fire');
 
-air = new Monster('', 'Air Elemental', -1, 5, 100, 0, 40);
+air = new Monster('', 'Air Elemental', -1, 5, 100, 0, 40, "a");
 air.setResist('air');
 air.setWeak('earth');
 
-earth = new Monster('', 'Earth Elemental', -1, 75, 100, 40, 0);
+earth = new Monster('', 'Earth Elemental', -1, 75, 100, 40, 0, "e");
 earth.setResist('earth');
 earth.setWeak('air');
 
-water = new Monster('', 'Water Elemental', -1, 15, 100, 30, 10);
+water = new Monster('', 'Water Elemental', -1, 15, 100, 30, 10, "w");
 water.setResist('water');
 water.setWeak('fire');
 
-fire = new Monster('', 'Fire Elemental', -1, 25, 100, 20, 20);
+fire = new Monster('', 'Fire Elemental', -1, 25, 100, 20, 20, "f");
 fire.setResist('fire');
 fire.setWeak('water');
 
-dwarf = new Monster('', 'Dwarf Ruffian', 50, 75, 40, 30, 0);
+dwarf = new Monster('', 'Dwarf Ruffian', 50, 75, 40, 30, 0, "r");
 dwarf.setResist('earth');
 dwarf.setWeak('air');
 
-elf = new Monster('', 'Elf Hunter', 40, 50, 75, 10, 30);
+elf = new Monster('', 'Elf Hunter', 40, 50, 75, 10, 30, "h");
 elf.setResist('air');
 elf.setWeak('earth');
 
-human = new Monster('', 'Prospector', 50, 50, 50, 20, 10);
+human = new Monster('', 'Prospector', 50, 50, 50, 20, 10, "p");
 human.setResist('air');
 human.setWeak('earth');
 
-golem = new Monster('', 'Golem', -1, 100, -1, 40, 0);
+golem = new Monster('', 'Golem', -1, 100, -1, 40, 0, "G");
 golem.setResist('earth');
 golem.setWeak('air');
+
+var mobtypes = [
+	dummy,
+	goblin,
+	orc,
+	skel,
+	zombie,
+	wight,
+	air,
+	earth,
+	water,
+	fire,
+	dwarf,
+	elf,
+	human,
+	golem
+];

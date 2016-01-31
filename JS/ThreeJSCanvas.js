@@ -119,6 +119,7 @@ THREECanvas.prototype.spawnPlayerProjectile = function(element, accent, targets,
 
         var proj = new Projectile({x: this.player.gridX, y: 1, z: this.player.gridZ}, myMesh, this.elementEnum[element]);
         proj.setSpell(spell);
+        proj.playSound();
 
         if(this.player.rotY === 0){
             if(this.player.grid[this.player.gridZ - 1][this.player.gridX] !== 0){
@@ -315,6 +316,8 @@ function update()
 
     myThreeCanvas.processParticles(delta, tick);
     myThreeCanvas.processProjectiles(tick);
+
+    if (tick < 0) tick = 0;
 
     myThreeCanvas.particleSystems[0].update(tick);
     myThreeCanvas.particleSystems[1].update(tick);
