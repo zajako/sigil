@@ -92,6 +92,5 @@ book2.setTextureId(13);
 
 var itemTypeEnum = {
 	"Z" : book1,
-	"Q" : book2,
-
+	"Q" : book2
 };

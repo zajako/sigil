@@ -25,24 +25,33 @@ Projectile.prototype.setSpell = function(spell){
 
 Projectile.prototype.playSound = function()
 {
+
 	if(this.spell)
 	{
-		if(this.spell.element == "fire")
-		{
-			source = 'http://sigil.nevernull.com/IMG/sounds/fireMIXED.mp3';
-		}
-		if(this.spell.element == "air")
-		{
-      source = 'http://sigil.nevernull.com/IMG/sounds/airMIXED.mp3';
-		}
-		if(this.spell.element == "water")
-		{
-      source = 'http://sigil.nevernull.com/IMG/sounds/waterMIXED.mp3';
-		}
-		if(this.spell.element == "earth")
-		{
-      source = 'http://sigil.nevernull.com/IMG/sounds/earthMIXED.mp3';
-		}
+		
+			if(this.spell.element == "fire")
+			{
+				source = 'http://sigil.nevernull.com/IMG/sounds/fireMIXED.mp3';
+			}
+			if(this.spell.element == "air")
+			{
+	      source = 'http://sigil.nevernull.com/IMG/sounds/airMIXED.mp3';
+			}
+			if(this.spell.element == "water")
+			{
+	      source = 'http://sigil.nevernull.com/IMG/sounds/waterMIXED.mp3';
+			}
+			if(this.spell.element == "earth")
+			{
+	      source = 'http://sigil.nevernull.com/IMG/sounds/earthMIXED.mp3';
+			}
+		
+			if(this.spell.element == "butt")
+			{
+			   source = 'http://sigil.nevernull.com/IMG/sounds/easter_egg.mp3';
+			}
+		
+
 	}
 
 

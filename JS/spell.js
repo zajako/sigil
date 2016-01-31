@@ -9,13 +9,12 @@ function Spell(name, element, accent, modifier, material, score)
   this.accent = accent ? accent : "ball";
   this.modifier = modifier ? modifier : "long";
   this.score = score;
+  this.butt = false;
   // this.position = position;
 }
 
 
 Spell.prototype.cast = function(){
-
-
 
    myThreeCanvas.spawnPlayerProjectile(this.element, "ball", [{forward: 2, right:0}], this);
 

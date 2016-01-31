@@ -90,7 +90,23 @@
 
 
 
+#gameover
+{
+	display: none;
+	position: absolute;
+	left: 8px;
+	top: 8px;
+	width: 800px;
+	height: 900px;
+	background-color: #000000;
+	color: #FFFFFF;
+}
 
+#gameover h1
+{
+	text-align: center;
+	color: #FFFFFF;
+}
 
 
 
@@ -121,3 +137,16 @@ body
       color: #afa
       background-color: transparent
       border: none
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -47,12 +47,40 @@ Sigil.prototype.init = function() {
 };
 
 
+Sigil.prototype.death = function()
+{
+    //Play SOund
+    source = 'http://sigil.nevernull.com/IMG/sounds/DEATH.mp3';
+    playWhenLoaded = function()
+    {
+        this.loop = true;
+        this.play();
+    };
+    song = new THREE.Audio3D({"url":source, "reciever": myThreeCanvas.player, "onload": playWhenLoaded});
+    // myThreeCanvas.meshes[0].add(song);
+
+    radius = parseInt( 50000, 10 );
+    song.soundRadius = radius;
+
+    //Inflict Damage
+    // sigil.takeDamage(this.ranged);
+
+    $('#gameover').show();
+    $('#credits').attr('src', "credits.html");
+}
+
+
 
 
 Sigil.prototype.takeDamage = function(amount)
 {
     sigil._currentHp = sigil._currentHp - amount;
     $('#current_hp').width(sigil._currentHp);
+
+    if(sigil._currentHp <= 0)
+    {
+        sigil.death();
+    }
 }
 
 Sigil.prototype.targetMonster = function(monster)

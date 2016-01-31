@@ -74,8 +74,8 @@ THREECanvas.prototype.loadIn = function(){
     this.loadTexture("./IMG/Textures/TempleWall6.png", 1, 1);
     this.loadTexture("./IMG/Textures/TempleWall7.png", 1, 1);
     this.loadTexture("./IMG/Textures/DummyUVs_textured.png", 1, 1);
-    this.loadTexture("./IMG/Textures/BookUVs_painted.png", 1, 1);
-    this.loadTexture("./IMG/Textures/BookUVs_painted_GREEN.png", 1, 1);
+    this.loadTexture("./IMG/UVs/BookUVs_painted.png", 1, 1);
+    this.loadTexture("./IMG/UVs/BookUVs_painted_GREEN.png", 1, 1);
     this.loadTexture("./IMG/Textures/ceiling.png", 1, 1);
     
 
@@ -83,6 +83,7 @@ THREECanvas.prototype.loadIn = function(){
     this.addParticleSystem({name: 'fire', maxParticles: 75000, spawnRate: 12500, color: 0xff6600, colorRandomness: .1, positionRandomness: .3, verticalSpeed: 1.33, horizontalSpeed: 1.5, velocity: new THREE.Vector3(0, 0, 0), size: 20, position: new THREE.Vector3(-500, -5, -500), velocityRandomness: 0, lifetime: .25, turbulence: 0});
     this.addParticleSystem({name: 'water', maxParticles: 75000, spawnRate: 12500, color: 0x33cbff, colorRandomness: .1, positionRandomness: .3, verticalSpeed: 1.33, horizontalSpeed: 1.5, velocity: new THREE.Vector3(0, 0, 0), size: 20, position: new THREE.Vector3(-500, -5, -500), velocityRandomness: 0, lifetime: .25, turbulence: 0});
     this.addParticleSystem({name: 'earth', maxParticles: 75000, spawnRate: 12500, color: 0x734d26, colorRandomness: .1, positionRandomness: .3, verticalSpeed: 1.33, horizontalSpeed: 1.5, velocity: new THREE.Vector3(0, 0, 0), size: 20, position: new THREE.Vector3(-500, -5, -500), velocityRandomness: 0, lifetime: .25, turbulence: 0});
+    this.addParticleSystem({name: 'butt', maxParticles: 75000, spawnRate: 12500, color: 0x734d26, colorRandomness: .1, positionRandomness: .3, verticalSpeed: 1.33, horizontalSpeed: 1.5, velocity: new THREE.Vector3(0, 0, 0), size: 20, position: new THREE.Vector3(-500, -5, -500), velocityRandomness: 0, lifetime: .25, turbulence: 0});
     this.addParticleSystem({name: 'air', maxParticles: 75000, spawnRate: 12500, color: 0xd9d9d9, colorRandomness: .1, positionRandomness: .3, verticalSpeed: 1.33, horizontalSpeed: 1.5, velocity: new THREE.Vector3(0, 0, 0), size: 20, position: new THREE.Vector3(-500, -5, -500), velocityRandomness: 0, lifetime: .25, turbulence: 0});
 //LoadWalls and floor
     for(var i=0; i < this.map.grid.length; i++){
