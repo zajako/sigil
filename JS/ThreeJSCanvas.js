@@ -56,6 +56,10 @@ THREECanvas.prototype.addFloorSegment = function(x, y){
     this.addMeshToScene(this.makeGeometry(THREE.BoxGeometry, 5, 5, 0.1), new THREE.MeshBasicMaterial({color: 0xffffff, map: this.textures[floor], side: THREE.DoubleSide}), new THREE.Vector3(x * 5, -2, y * 5), new THREE.Vector3(Math.PI / 2,0,0));
 };
 
+THREECanvas.prototype.addCeilingSegment = function(x, y){
+    this.addMeshToScene(this.makeGeometry(THREE.BoxGeometry, 5, 5, 0.1), new THREE.MeshBasicMaterial({color: 0xffffff, map: this.textures[14], side: THREE.DoubleSide}), new THREE.Vector3(x * 5, 3.05, y * 5), new THREE.Vector3(Math.PI / 2,0,0));
+};
+
 THREECanvas.prototype.loadIn = function(){
 //Load textures
     this.loadTexture("./IMG/Textures/CobbleFloor.png", 1, 1);
@@ -72,6 +76,7 @@ THREECanvas.prototype.loadIn = function(){
     this.loadTexture("./IMG/Textures/DummyUVs_textured.png", 1, 1);
     this.loadTexture("./IMG/Textures/BookUVs_painted.png", 1, 1);
     this.loadTexture("./IMG/Textures/BookUVs_painted_GREEN.png", 1, 1);
+    this.loadTexture("./IMG/Textures/ceiling.png", 1, 1);
     
 
 //Particle Systems
@@ -83,6 +88,7 @@ THREECanvas.prototype.loadIn = function(){
     for(var i=0; i < this.map.grid.length; i++){
         for(var j=0; j < this.map.grid[i].length; j++){
             var value = this.map.grid[i][j];
+
             //I'm a wall segment
             if(value === 0){
                 this.addWallSegment(j, i);
@@ -90,6 +96,7 @@ THREECanvas.prototype.loadIn = function(){
             //I'm not!
             if(value !== 0){
                 this.addFloorSegment(j, i);
+                this.addCeilingSegment(j, i);
             }
             //I'm the player
             if(value === 2){
@@ -357,8 +364,6 @@ THREECanvas.prototype.processProjectiles = function(tick){
 
             myBullet.position.x += myBullet.addX;
             myBullet.position.z += myBullet.addZ;
-
-
 
             for(var l=0;l<this.monsters.length;l++){
                 var distanceToMonster = this.getDistanceFromVector(this.bulletGroups[k][0].mesh.position, this.monsters[l].mesh.position);
