@@ -74,8 +74,8 @@ THREECanvas.prototype.loadIn = function(){
     this.loadTexture("./IMG/Textures/TempleWall6.png", 1, 1);
     this.loadTexture("./IMG/Textures/TempleWall7.png", 1, 1);
     this.loadTexture("./IMG/Textures/DummyUVs_textured.png", 1, 1);
-    this.loadTexture("./IMG/Textures/BookUVs_painted.png", 1, 1);
-    this.loadTexture("./IMG/Textures/BookUVs_painted_GREEN.png", 1, 1);
+    this.loadTexture("./IMG/UVs/BookUVs_painted.png", 1, 1);
+    this.loadTexture("./IMG/UVs/BookUVs_painted_GREEN.png", 1, 1);
     this.loadTexture("./IMG/Textures/ceiling.png", 1, 1);
     
 
@@ -315,10 +315,6 @@ THREECanvas.prototype.dotProduct = function(u, v){
     u.dot( v );
 };
 
-THREECanvas.prototype.processTurn = function(){
-
-};
-
 THREECanvas.prototype.getDistanceFromVector = function(v1, v2){
     return Math.sqrt(Math.pow((v2.x - v1.x), 2) + Math.pow((v2.y - v1.y), 2));
 };
@@ -378,20 +374,10 @@ THREECanvas.prototype.processProjectiles = function(tick){
                         this.monsters[l].arrayslot = l;
                         this.monsters[l].onContact(myBullet.spell);
                         console.log("Collision "+myBullet.spell.element);
-
-
-
-                        
                     }
-
-
-                    
                 }
             }
-
-
         }
-
     }
 };
 
