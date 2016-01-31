@@ -26,7 +26,7 @@ function THREECanvas(){
     this.particleSystems = [];
 
     //Actual Non Mesh Information Storage 
-    this.bullets = [];
+    this.bulletGroups = [];
     this.monsters = [];
 
     this.init();
@@ -73,18 +73,18 @@ THREECanvas.prototype.loadIn = function(){
     this.loadTexture("./IMG/Textures/DummyUVs_textured.png", 1, 1);
 
 //Particle Systems
-    this.addParticleSystem({name: 'fire', maxParticles: 75000, spawnRate: 12500, color: 0xff6600, positionRandomness: .3, verticalSpeed: 1.33, horizontalSpeed: 1.5, velocity: new THREE.Vector3(0, 0, 0), size: 15, position: new THREE.Vector3(-500, -5, -500), velocityRandomness: 0, lifetime: .1, turbulence: 0});
-    this.addParticleSystem({name: 'water', maxParticles: 75000, spawnRate: 12500, color: 0x33cbff, positionRandomness: .3, verticalSpeed: 1.33, horizontalSpeed: 1.5, velocity: new THREE.Vector3(0, 0, 0), size: 15, position: new THREE.Vector3(-500, -5, -500), velocityRandomness: 0, lifetime: .1, turbulence: 0});
-    this.addParticleSystem({name: 'earth', maxParticles: 75000, spawnRate: 12500, color: 0x734d26, positionRandomness: .3, verticalSpeed: 1.33, horizontalSpeed: 1.5, velocity: new THREE.Vector3(0, 0, 0), size: 15, position: new THREE.Vector3(-500, -5, -500), velocityRandomness: 0, lifetime: .1, turbulence: 0});
-    this.addParticleSystem({name: 'air', maxParticles: 75000, spawnRate: 12500, color: 0xd9d9d9, positionRandomness: .3, verticalSpeed: 1.33, horizontalSpeed: 1.5, velocity: new THREE.Vector3(0, 0, 0), size: 15, position: new THREE.Vector3(-500, -5, -500), velocityRandomness: 0, lifetime: .1, turbulence: 0});
+    this.addParticleSystem({name: 'fire', maxParticles: 75000, spawnRate: 12500, color: 0xff6600, positionRandomness: .3, verticalSpeed: 1.33, horizontalSpeed: 1.5, velocity: new THREE.Vector3(0, 0, 0), size: 20, position: new THREE.Vector3(-500, -5, -500), velocityRandomness: 0, lifetime: .1, turbulence: 0});
+    this.addParticleSystem({name: 'water', maxParticles: 75000, spawnRate: 12500, color: 0x33cbff, positionRandomness: .3, verticalSpeed: 1.33, horizontalSpeed: 1.5, velocity: new THREE.Vector3(0, 0, 0), size: 20, position: new THREE.Vector3(-500, -5, -500), velocityRandomness: 0, lifetime: .1, turbulence: 0});
+    this.addParticleSystem({name: 'earth', maxParticles: 75000, spawnRate: 12500, color: 0x734d26, positionRandomness: .3, verticalSpeed: 1.33, horizontalSpeed: 1.5, velocity: new THREE.Vector3(0, 0, 0), size: 20, position: new THREE.Vector3(-500, -5, -500), velocityRandomness: 0, lifetime: .1, turbulence: 0});
+    this.addParticleSystem({name: 'air', maxParticles: 75000, spawnRate: 12500, color: 0xd9d9d9, positionRandomness: .3, verticalSpeed: 1.33, horizontalSpeed: 1.5, velocity: new THREE.Vector3(0, 0, 0), size: 20, position: new THREE.Vector3(-500, -5, -500), velocityRandomness: 0, lifetime: .1, turbulence: 0});
 //LoadWalls and floor
     for(var i=0; i < this.map.grid.length; i++){
         for(var j=0; j < this.map.grid[i].length; j++){
             var value = this.map.grid[i][j];
             //I'm a wall segment
-            if(value === 0){
-                this.addWallSegment(j, i);
-            }
+            // if(value === 0){
+            //     this.addWallSegment(j, i);
+            // }
             //I'm not!
             if(value !== 0){
                 this.addFloorSegment(j, i);
@@ -96,10 +96,10 @@ THREECanvas.prototype.loadIn = function(){
                 this.player.gridX = j;
                 this.player.gridZ = i;
             }
-            if(monsterTypeEnum[value.toString()] !== undefined)
-            {
-                this.spawnMonster(monsterTypeEnum[value.toString()], new THREE.Vector3(j * 5, -1.5, i * 5), new THREE.Vector3(0,0,0));
-            }
+            // if(monsterTypeEnum[value.toString()] !== undefined)
+            // {
+            //     this.spawnMonster(monsterTypeEnum[value.toString()], new THREE.Vector3(j * 5, -1.5, i * 5), new THREE.Vector3(0,0,0));
+            // }
         }
     }
 };
@@ -112,6 +112,7 @@ THREECanvas.prototype.spawnMonster = function(monsterType, position, rotation){
 };
 
 THREECanvas.prototype.spawnPlayerProjectile = function(element, accent, targets, spell){
+    var myBulletGroup = [];
     for(var i=0; i < targets.length;i++){
         var myMesh = this.addMeshToScene(this.makeGeometry(THREE.SphereGeometry, 0.5,16,16),
             new THREE.MeshBasicMaterial({color: 0xffffff, visible: false}),
@@ -124,27 +125,39 @@ THREECanvas.prototype.spawnPlayerProjectile = function(element, accent, targets,
 
         if(this.player.rotY === 0){
             if(this.player.grid[this.player.gridZ - 1][this.player.gridX] !== 0){
-                proj.addZ = -0.1;
+                proj.addZ = -0.01;
+                proj.addZOffset = -1;
             }
         }
         else if(this.player.rotY == 90 || this.player.rotY == -270){
             if(this.player.grid[this.player.gridZ][this.player.gridX - 1] !== 0){
-                proj.addX = -0.1;
+                proj.addX = -0.01;
+                proj.addXOffset = -1;
             }
         }
         else if(this.player.rotY == 270 || this.player.rotY == -90){
             if(this.player.grid[this.player.gridZ][this.player.gridX + 1] !== 0){
-                proj.addX = 0.1;
+                proj.addX = 0.01;
+                proj.addXOffset = 1;
             }
         }
         else if(this.player.rotY == 180 || this.player.rotY == -180){
             if(this.player.grid[this.player.gridZ + 1][this.player.gridX] !== 0){
-                proj.addZ = 0.1;
+                proj.addZ = 0.01;
+                proj.addZOffset = 1;
             }
         }
         // this.particleSystems[0].rotation.set(0,degreesToRadians(this.player.rotY),0);
-        this.bullets.push(proj);
+        return proj;
     }
+};
+
+THREECanvas.prototype.castSpell = function(spells){
+    var myBulletGroup = [];
+    for(var i=0; i<3;i++){
+        myBulletGroup.push(this.spawnPlayerProjectile(spells[i].element, spells[i].accent, [{forward: 2, right:0}], spells[i]));
+    }
+    this.bulletGroups.push(myBulletGroup);
 };
 
 THREECanvas.prototype.addParticleSystem = function(args){
@@ -283,18 +296,45 @@ THREECanvas.prototype.processTurn = function(){
 };
 
 THREECanvas.prototype.processProjectiles = function(tick){
-    for(var k=0;k<this.bullets.length;k++){
-        this.bullets[k].mesh.position.x += (this.bullets[k].addX + this.bullets[k].xOffset);
-        this.bullets[k].mesh.position.z += (this.bullets[k].addZ + this.bullets[k].zOffset);
+    for(var k=0;k<this.bulletGroups.length;k++){
+        for(var j=0;j<this.bulletGroups[k].length;j++){
+            var myBullet = this.bulletGroups[k][j];
 
-        //Movement shenanigans
-        this.bullets[k].mesh.position.y = Math.sin(( 8 * tick) * degreesToRadians(45));
+            myBullet.mesh.position.x = myBullet.position.x * 5 + myBullet.xOffset;
+            myBullet.mesh.position.z = myBullet.position.z * 5 + myBullet.zOffset;
 
-        //Update the particle system 'options' position to the new bullet position. This is just an easy way to make sure
-        //particles are being spawned in the correct location
-        options[this.bullets[k].element].position.x = this.bullets[k].mesh.position.x;
-        options[this.bullets[k].element].position.y = this.bullets[k].mesh.position.y;
-        options[this.bullets[k].element].position.z = this.bullets[k].mesh.position.z;
+            //-z is forward
+            if(myBullet.addZOffset < 0){
+                //Movement shenanigans
+                myBullet.zOffset = -j * 1.5;
+                myBullet.xOffset = Math.cos(25 * tick);
+            }
+            //z forward
+            if(myBullet.addZOffset > 0){
+                myBullet.zOffset = j * 1.5;
+                myBullet.xOffset = Math.cos(25 * tick);
+            }
+            //-x is forward
+            if(myBullet.addXOffset < 0){
+                myBullet.xOffset = -j * 1.5;
+                myBullet.zOffset = Math.cos(25 * tick);
+            }
+            //x forward
+            if(myBullet.addXOffset > 0){
+                myBullet.xOffset = j * 1.5;
+                myBullet.zOffset = Math.cos(25 * tick);
+            }
+            myBullet.mesh.position.y = Math.sin(( 25 * tick) + (j * Math.PI / 2));
+
+            //Update the particle system 'options' position to the new bullet position. This is just an easy way to make sure
+            //particles are being spawned in the correct location
+            options[myBullet.element].position.x = myBullet.mesh.position.x;
+            options[myBullet.element].position.y = myBullet.mesh.position.y;
+            options[myBullet.element].position.z = myBullet.mesh.position.z;
+
+            myBullet.position.x += myBullet.addX;
+            myBullet.position.z += myBullet.addZ;
+        }
     }
 };
 

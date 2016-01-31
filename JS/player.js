@@ -50,13 +50,13 @@ Player.prototype.moveBackward = function(grid){
             this.gridZ += 1;
         }
     }
-    else if(this.rotY == 90 || -270){
+    else if(this.rotY == 90 || this.rotY == -270){
         if(this.grid[this.gridZ][this.gridX + 1] !== 0){
             this.x += 5;
             this.gridX += 1;
         }
     }
-    else if(this.rotY == 270 || -90){
+    else if(this.rotY == 270 || this.rotY == -90){
         if(this.grid[this.gridZ][this.gridX - 1] !== 0){
             this.x -= 5;
             this.gridX -= 1;
@@ -68,6 +68,7 @@ Player.prototype.moveBackward = function(grid){
             this.gridZ -= 1;
         }
     }
+    console.log(this.rotY);
     myThreeCanvas.playerMoved();
 };
 
