@@ -275,7 +275,6 @@ THREECanvas.prototype.processParticles = function(delta, tick){
             for (var x = 0; x < spawnerOptions[i].spawnRate * delta; x++) {
               // Yep, that's really it.  Spawning particles is super cheap, and once you spawn them, the rest of
               // their lifecycle is handled entirely on the GPU, driven by a time uniform updated below
-              // myThreeCanvas.particleSystems[0].spawnParticle(options);
               myThreeCanvas.particleSystems[i].spawnParticle(options[i]);
             }
         }
