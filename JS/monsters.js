@@ -1,22 +1,6 @@
 
 function Monster(img, name, mind, body, spirit, melee, ranged, modelPathName)
 {
-
-//model pathname
-//texture id
-
-/*
-
-	for(var k=0; k < mobtypes.length; k++)
-            {
-                if(this.map.grid[i][j] == mobtypes[k].spawncode)
-                {
-                    
-                }
-            }
-
-*/
-
     this.image = img;
     this.name = name;
     this.mind = mind;
@@ -98,7 +82,7 @@ Monster.prototype.onContact = function(spell)
 	//Handle Material
 	if(this.mind > 0)
 	{
-		if(spell.material.name == "mercury" || spell.material.name == "Blood")
+		if(spell.material.name == "QuickSilver" || spell.material.name == "Blood")
 		{
 			console.log("Monster Takes Mind Damage!");
 			this.current_mind -= damage;
@@ -107,7 +91,7 @@ Monster.prototype.onContact = function(spell)
 
 	if(this.body > 0)
 	{
-		if(spell.material.name == "charcoal" || spell.material.name == "Blood")
+		if(spell.material.name == "Charcoal" || spell.material.name == "Blood")
 		{
 			console.log("Monster Takes Body Damage!");
 			this.current_body -= damage;
@@ -116,12 +100,14 @@ Monster.prototype.onContact = function(spell)
 
 	if(this.spirit > 0)
 	{
-		if(spell.material.name == "gold" || spell.material.name == "Blood")
+		if(spell.material.name == "Gold" || spell.material.name == "Blood")
 		{
 			console.log("Monster Takes Spirit Damage!");
 			this.current_spirit -= damage;
 		}
 	}
+
+	sigil.updateAll();
 
 	if(
 		(this.mind > 0 && this.current_mind <= 0) || 
@@ -129,28 +115,26 @@ Monster.prototype.onContact = function(spell)
 		(this.spirit > 0 && this.current_spirit <= 0)
 	)
 	{
+
 		this.death();
 	}
-	// debugger;
-}
-
-Monster.prototype.search = function()
-{
-	if(myThreeCanvas.isPlayerInRange(this.mesh))
+	else
 	{
-		sigil.targetMonster(this);
+		source = 'http://sigil.nevernull.com/IMG/sounds/dummy_hit1.mp3';
+		playWhenLoaded = function()
+		{
+	    	this.loop = true;
+	    	this.play();
+		};
+		song = new THREE.Audio3D({"url":source, "reciever": myThreeCanvas.player, "onload": playWhenLoaded});
+		this.mesh.add(song);
 
-		if(myThreeCanvas.isPlayerInCloseRange(this.mesh))
-		{
-			if(this.melee > 0)
-				this.attack();
-		}
-		else
-		{
-			if(this.ranged > 0)
-				this.rangedAttack();
-		}
+		radius = parseInt( 10, 10 );
+		song.soundRadius = radius;
 	}
+
+
+	// debugger;
 }
 
 Monster.prototype.attack = function()
@@ -158,6 +142,19 @@ Monster.prototype.attack = function()
 	if(Math.random() >= 0.8)
 	{
 		//play sound
+		source = 'http://sigil.nevernull.com/IMG/sounds/Melee1.mp3';
+		playWhenLoaded = function()
+		{
+	    	this.loop = true;
+	    	this.play();
+		};
+		song = new THREE.Audio3D({"url":source, "reciever": myThreeCanvas.player, "onload": playWhenLoaded});
+		this.mesh.add(song);
+
+		radius = parseInt( 10, 10 );
+		song.soundRadius = radius;
+
+		//Inflict Damage
 		sigil.takeDamage(this.melee);
 	}
 	
@@ -167,7 +164,20 @@ Monster.prototype.rangedAttack = function()
 {
 	if(Math.random() >= 0.4)
 	{
-		//play sound
+		//Play SOund
+    	source = 'http://sigil.nevernull.com/IMG/sounds/Ranged.mp3';
+		playWhenLoaded = function()
+		{
+	    	this.loop = true;
+	    	this.play();
+		};
+		song = new THREE.Audio3D({"url":source, "reciever": myThreeCanvas.player, "onload": playWhenLoaded});
+		this.mesh.add(song);
+
+		radius = parseInt( 10, 10 );
+		song.soundRadius = radius;
+
+		//Inflict Damage
 		sigil.takeDamage(this.ranged);
 	}
 }
@@ -175,14 +185,15 @@ Monster.prototype.rangedAttack = function()
 Monster.prototype.death = function()
 {
 	//Despawn Monster
-	console.log("Monster Has Died!");
-	myThreeCanvas.scene.remove(mesh);
-
 	sigil.cancelTarget(this);
+	console.log("Monster Has Died!");
+	// myThreeCanvas.scene.remove(self);
+	// myThreeCanvas.monsters.remove(mesh);
+	
 }
 
 //Monster(img, name, mind, body, spirit, melee, ranged)
-dummy = new Monster('', 'Training Dummy', -1, 100, -1, 20, 0, "./MODELS/Dummy.json");
+dummy = new Monster('', 'Training Dummy', 100, 100, 50, 1, 1, "./MODELS/Dummy.json");
 dummy.setResist('water');
 dummy.setWeak('fire');
 dummy.setTextureId(11);

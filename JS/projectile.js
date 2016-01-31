@@ -41,17 +41,18 @@ Projectile.prototype.playSound = function()
 		}
 	}
 
-	var scene = myThreeCanvas.scene;
-	var camera = myThreeCanvas.player;
-	var renderer = myThreeCanvas.renderer;
+
+
+
 	playWhenLoaded = function()
 	{
-    this.loop = true;
-    this.play();
+    	this.loop = true;
+    	this.play();
 	};
-	song = new THREE.Audio3D({"url":source, "reciever": camera, "onload": playWhenLoaded});
+	song = new THREE.Audio3D({"url":source, "reciever": myThreeCanvas.player, "onload": playWhenLoaded});
 	this.mesh.add(song);
-  radius = parseInt( 10, 10 );
-  song.soundRadius = radius;
+
+	radius = parseInt( 10, 10 );
+	song.soundRadius = radius;
 
 };

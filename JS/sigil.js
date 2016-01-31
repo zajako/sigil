@@ -60,9 +60,12 @@ Sigil.prototype.targetMonster = function(monster)
     sigil.selectedMonster = monster;
     $('#enemybar').show();
     $('#enemybarback').show();
+    sigil.updateMind();
+    sigil.updateBody();
+    sigil.updateSpirit();
     sigil.refreshMonsterMind = setInterval(sigil.updateMind(), 1000);
-    sigil.refreshMonsterBody = setInterval(sigil.updateMind(), 1000);
-    sigil.refreshMonsterSpirit = setInterval(sigil.updateMind(), 1000);
+    sigil.refreshMonsterBody = setInterval(sigil.updateBody(), 1000);
+    sigil.refreshMonsterSpirit = setInterval(sigil.updateSpirit(), 1000);
 }
 
 Sigil.prototype.cancelTarget = function()
@@ -94,7 +97,13 @@ Sigil.prototype.updateSpirit = function()
     $('#current_spirit').width(amount);
 }
 
-
+Sigil.prototype.updateAll = function()
+{
+    sigil.updateSpirit();
+    sigil.updateBody();
+    sigil.updateMind();
+    
+}
 
 
 Sigil.prototype.initGUI = function() {
@@ -234,12 +243,18 @@ Sigil.prototype.selectBlood = function()
 {
     console.log("Blood Selected");
     sigil.material = blood;
+
+    //  var spell = new Spell("fire", "fire", "ball", "", sigil.material, 10);
+    // sigil.selectedMonster.onContact(spell);
 };
 
 Sigil.prototype.selectCharcoal = function()
 {
     console.log("Charcoal Selected");
     sigil.material = charcoal;
+
+    //  var spell = new Spell("fire", "fire", "ball", "", sigil.material, 10);
+    // sigil.selectedMonster.onContact(spell);
 };
 
 Sigil.prototype.selectMercury = function()
@@ -247,6 +262,8 @@ Sigil.prototype.selectMercury = function()
     console.log("Mercury Selected");
     sigil.material = mercury;
 
+    // var spell = new Spell("fire", "fire", "ball", "", sigil.material, 10);
+    // sigil.selectedMonster.onContact(spell);
     // sigil.unlockBook2();
 };
 
@@ -255,8 +272,11 @@ Sigil.prototype.selectGold = function()
     console.log("Gold Selected");
     sigil.material = gold;
 
-    sigil.targetMonster(orc);
+    // sigil.targetMonster(orc);
 
+
+    // var spell = new Spell("fire", "fire", "ball", "", sigil.material, 10);
+    // sigil.selectedMonster.onContact(spell);
 
     // this.unlockBook3();
 };

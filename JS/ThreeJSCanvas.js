@@ -261,15 +261,20 @@ THREECanvas.prototype.updateEnemyTargeting = function(){
     for(var i=0; i<this.monsters.length;i++){
         //This checks to see if the mesh has been instantiated and placed yet, probably a better way to do this.
         if(this.monsters[i].mesh.position !== undefined){
+            if(this.monsters[i].current_mind < 0 || this.monsters[i].current_body < 0 || this.monsters[i].current_spirit < 0)
+                continue;
+
             var distance = Math.sqrt(Math.pow((this.player.gridX - this.monsters[i].gridX), 2) + Math.pow((this.player.gridZ - this.monsters[i].gridZ), 2));
             if(distance <= 3 && distance > 1)
             {
+                sigil.targetMonster(this.monsters[i]);
                 if(this.monsters[i].ranged > 0)
                     this.monsters[i].rangedAttack();
 
             }
             else if(distance <= 1)
             {
+                sigil.targetMonster(this.monsters[i]);
                 if(this.monsters[i].melee > 0)
                     this.monsters[i].attack();
             }
