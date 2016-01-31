@@ -1,6 +1,6 @@
 var _isDown, _spellForms, _r, _g, _rc, _cForm, _skiper, _castFinished;
 
-var _currentHp, _maxHp;
+
 
 
 function Sigil(){
@@ -15,13 +15,28 @@ function Sigil(){
     _castFinished = false;
     sigil.init();
 
+    sigil.book2lock = true;
+    sigil.book3lock = true;
+
+    sigil._currentHp = 240;
+    sigil._maxHp = 240;
+
+    sigil.selectedMonster = "";
 
 
-    $('#current_hp').width(240);
+
+    $('#current_hp').width(sigil._currentHp);
+
+
+    $('#current_mind').width(240);
+    $('#current_body').width(240);
+    $('#current_spirit').width(240);
     
     // setInterval(function(){
     //     sigil.draw();
     // },5000);
+
+    
 }
 
 Sigil.prototype.init = function() {
@@ -30,6 +45,57 @@ Sigil.prototype.init = function() {
     sigil.initDollar();
     sigil.draw();
 };
+
+
+
+
+Sigil.prototype.takeDamage = function(amount)
+{
+    sigil._currentHp = sigil._currentHp - amount;
+    $('#current_hp').width(sigil._currentHp);
+}
+
+Sigil.prototype.targetMonster = function(monster)
+{
+    sigil.selectedMonster = monster;
+    $('#enemybar').show();
+    $('#enemybarback').show();
+    sigil.refreshMonsterMind = setInterval(sigil.updateMind(), 1000);
+    sigil.refreshMonsterBody = setInterval(sigil.updateMind(), 1000);
+    sigil.refreshMonsterSpirit = setInterval(sigil.updateMind(), 1000);
+}
+
+Sigil.prototype.cancelTarget = function()
+{
+    sigil.selectedMonster = "";
+    $('#enemybar').hide();
+    $('#enemybarback').hide();
+    clearInterval(sigil.refreshMonsterMind);
+    clearInterval(sigil.refreshMonsterBody);
+    clearInterval(sigil.refreshMonsterSpirit);
+}
+
+Sigil.prototype.updateMind = function()
+{
+    var amount = sigil.selectedMonster.current_mind * 240 / sigil.selectedMonster.mind;
+
+    $('#current_mind').width(amount);
+}
+Sigil.prototype.updateBody = function()
+{
+    var amount = sigil.selectedMonster.current_body * 240 / sigil.selectedMonster.body;
+
+    $('#current_body').width(amount);
+}
+Sigil.prototype.updateSpirit = function()
+{
+    var amount = sigil.selectedMonster.current_spirit * 240 / sigil.selectedMonster.spirit;
+
+    $('#current_spirit').width(amount);
+}
+
+
+
 
 Sigil.prototype.initGUI = function() {
 
@@ -72,7 +138,13 @@ Sigil.prototype.initGUI = function() {
     btnspellbook.addFunction("sigil.showSpellbook");
     sigil.drawObjects.push(btnspellbook);
 
+    sigil.btnspellbook2 = new cButton('./IMG/buttons/tutorial_Icon2_DESAT.png', 20, 150, 107, 122, true);
+    sigil.btnspellbook2.addFunction("sigil.showSpellbook2");
+    sigil.drawObjects.push(sigil.btnspellbook2);
 
+    sigil.btnspellbook3 = new cButton('./IMG/buttons/tutorial_Icon3_DESAT.png', 20, 280, 107, 122, true);
+    sigil.btnspellbook3.addFunction("sigil.showSpellbook3");
+    sigil.drawObjects.push(sigil.btnspellbook3);
 };
 
 Sigil.prototype.initCanvas = function() {
@@ -174,12 +246,19 @@ Sigil.prototype.selectMercury = function()
 {
     console.log("Mercury Selected");
     sigil.material = mercury;
+
+    sigil.unlockBook2();
 };
 
 Sigil.prototype.selectGold = function()
 {
     console.log("Gold Selected");
     sigil.material = gold;
+
+    sigil.targetMonster(dummy);
+
+
+    this.unlockBook3();
 };
 
 Sigil.prototype.showSpellbook = function()
@@ -195,6 +274,66 @@ Sigil.prototype.showSpellbook = function()
     }
     
 }
+
+Sigil.prototype.showSpellbook2 = function()
+{
+    if(sigil.book2lock)
+    {
+        console.log("book 2 is locked");
+    }
+    else
+    {
+        console.log("Showing SpellBook2");
+        if($('#spellbook2').is(":visible"))
+        {
+            $('#spellbook2').hide();
+        }
+        else
+        {
+            $('#spellbook2').show();
+        }
+    }
+    
+    
+}
+
+Sigil.prototype.showSpellbook3 = function()
+{
+    if(sigil.book3lock)
+    {
+        console.log("book 3 is locked");
+    }
+    else
+    {
+        console.log("Showing SpellBook3");
+        if($('#spellbook3').is(":visible"))
+        {
+            $('#spellbook3').hide();
+        }
+        else
+        {
+            $('#spellbook3').show();
+        }
+    }        
+}
+
+
+Sigil.prototype.unlockBook2 = function()
+{
+    console.log("book2 unlocked");
+    sigil.book2lock = false;
+    sigil.btnspellbook2.image.src = './IMG/buttons/tutorial_Icon2.png';
+}
+
+Sigil.prototype.unlockBook3 = function()
+{
+    console.log("book3 unlocked");
+    sigil.btnspellbook3.image.src = './IMG/buttons/tutorial_Icon3.png';
+    sigil.book3lock = false;
+}
+
+
+
 
 //Dollar Integration
 Sigil.prototype.initDollar = function()
@@ -250,6 +389,11 @@ Sigil.prototype.mouseDownEvent = function(x, y, offX, offY)
         _spellForms[_cForm] = 1;
         _spellForms[_cForm] = new spellForm(sigil.material);
         _spellForms[_cForm].points[0] = new Point(x, y, 0);
+
+        if(sigil.material == blood)
+        {
+            sigil.takeDamage(10);
+        }
 
         console.log("Recording unistroke...");
     }
