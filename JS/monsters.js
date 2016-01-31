@@ -1,6 +1,22 @@
 
 function Monster(img, name, mind, body, spirit, melee, ranged, spawncode)
 {
+
+//model pathname
+//texture id
+
+/*
+
+	for(var k=0; k < mobtypes.length; k++)
+            {
+                if(this.map.grid[i][j] == mobtypes[k].spawncode)
+                {
+                    
+                }
+            }
+
+*/
+
     this.image = img;
     this.name = name;
     this.mind = mind;
@@ -14,7 +30,7 @@ function Monster(img, name, mind, body, spirit, melee, ranged, spawncode)
     this.current_mind = mind;
     this.current_body = body;
     this.current_spirit = spirit;
-    this.spawncode = "";
+    this.spawncode = spawncode;
 }
 
 Monster.prototype.clone = function()
@@ -208,3 +224,20 @@ human.setWeak('earth');
 golem = new Monster('', 'Golem', -1, 100, -1, 40, 0, "G");
 golem.setResist('earth');
 golem.setWeak('air');
+
+var mobtypes = [
+	dummy,
+	goblin,
+	orc,
+	skel,
+	zombie,
+	wight,
+	air,
+	earth,
+	water,
+	fire,
+	dwarf,
+	elf,
+	human,
+	golem
+];
