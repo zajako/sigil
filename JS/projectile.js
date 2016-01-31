@@ -6,6 +6,8 @@ function Projectile(position, mesh, element){
 
    this.addX = 0;
    this.addZ = 0;
+   this.xOffset = 0;
+   this.zOffset = 0;
 }
 
 Projectile.prototype.getWorldPosition = function(){
@@ -25,17 +27,17 @@ Projectile.prototype.playSound = function()
 		{
 			source = 'http://sigil.nevernull.com/IMG/sounds/fireMIXED.mp3';
 		}
-		else if(this.spell.element = "air")
+		if(this.spell.element == "air")
 		{
-			source = 'http://sigil.nevernull.com/IMG/sounds/airMIXED.mp3';
+      source = 'http://sigil.nevernull.com/IMG/sounds/airMIXED.mp3';
 		}
-		else if(this.spell.element = "water")
+		if(this.spell.element == "water")
 		{
-			source = 'http://sigil.nevernull.com/IMG/sounds/waterMIXED.mp3';
+      source = 'http://sigil.nevernull.com/IMG/sounds/waterMIXED.mp3';
 		}
-		else if(this.spell.element = "earth")
+		if(this.spell.element == "earth")
 		{
-			source = 'http://sigil.nevernull.com/IMG/sounds/earthMIXED.mp3';
+      source = 'http://sigil.nevernull.com/IMG/sounds/earthMIXED.mp3';
 		}
 	}
 
@@ -44,13 +46,12 @@ Projectile.prototype.playSound = function()
 	var renderer = myThreeCanvas.renderer;
 	playWhenLoaded = function()
 	{
-	    this.loop = true;
-	    this.play();
-		console.log(this);
+    this.loop = true;
+    this.play();
 	};
 	song = new THREE.Audio3D({"url":source, "reciever": camera, "onload": playWhenLoaded});
-  	mesh.add(song); 
-    radius = parseInt( 500, 10 );
-    song.soundRadius = radius;
+	this.mesh.add(song);
+  radius = parseInt( 500, 10 );
+  song.soundRadius = radius;
 
-}
+};

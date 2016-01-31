@@ -80,26 +80,27 @@ THREECanvas.prototype.loadIn = function(){
 //LoadWalls and floor
     for(var i=0; i < this.map.grid.length; i++){
         for(var j=0; j < this.map.grid[i].length; j++){
+            var value = this.map.grid[i][j];
             //I'm a wall segment
-            if(this.map.grid[i][j] === 0){
+            if(value === 0){
                 this.addWallSegment(j, i);
             }
             //I'm not!
-            if(this.map.grid[i][j] !== 0){
+            if(value !== 0){
                 this.addFloorSegment(j, i);
             }
             //I'm the player
-            if(this.map.grid[i][j] === 2){
+            if(value === 2){
                 this.player.x = j * 5;
                 this.player.z = i * 5;
                 this.player.gridX = j;
                 this.player.gridZ = i;
             }
+            // if($.inArray(value, monsterTypeEnum)){
+            //     this.spawnMonster(monsterTypeEnum[value], position, rotation);
+            // }
         }
     }
-
-// LoadGeometries
-    this.spawnMonster(dummy, new THREE.Vector3(this.player.x, -1.5, this.player.z), new THREE.Vector3(0,0,0));
 };
 
 THREECanvas.prototype.spawnMonster = function(monsterType, position, rotation){
@@ -252,8 +253,8 @@ THREECanvas.prototype.processTurn = function(){
 
 THREECanvas.prototype.processProjectiles = function(tick){
     for(var k=0;k<this.bullets.length;k++){
-        this.bullets[k].mesh.position.x += this.bullets[k].addX;
-        this.bullets[k].mesh.position.z += this.bullets[k].addZ;
+        this.bullets[k].mesh.position.x += (this.bullets[k].addX + this.bullets[k].xOffset);
+        this.bullets[k].mesh.position.z += (this.bullets[k].addZ + this.bullets[k].zOffset);
 
         //Movement shenanigans
         this.bullets[k].mesh.position.y = Math.sin(( 8 * tick) * degreesToRadians(45));
