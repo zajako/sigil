@@ -240,18 +240,18 @@ golem.setResist('earth');
 golem.setWeak('air');
 
 var monsterTypeEnum = {
-	"G" : "golem",
-	"p" : "human",
-	"h" : "elf",
-	"r" : "dwarf",
-	"f" : "fire",
-	"w" : "water",
-	"e" : "earth",
-	"a" : "air",
-	"w" : "wight",
-	"z" : "zombie",
-	"s" : "skel",
-	"o" : "orc",
-	"g" : "goblin",
+	"G" : golem,
+	"p" : human,
+	"h" : elf,
+	"r" : dwarf,
+	"f" : fire,
+	"w" : water,
+	"e" : earth,
+	"a" : air,
+	"w" : wight,
+	"z" : zombie,
+	"s" : skel,
+	"o" : orc,
+	"g" : goblin,
 	"d" : dummy
 };
