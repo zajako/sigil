@@ -112,7 +112,7 @@ THREECanvas.prototype.loadIn = function(){
 
             if(itemTypeEnum[value.toString()] !== undefined)
             {
-                this.spawnMonster(monsterTypeEnum[value.toString()], new THREE.Vector3(j * 5, -1.5, i * 5), new THREE.Vector3(0,0,0));
+                this.spawnMonster(itemTypeEnum[value.toString()], new THREE.Vector3(j * 5, 0, i * 5), new THREE.Vector3(0,0,0));
             }
         }
     }

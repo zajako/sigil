@@ -217,7 +217,7 @@ Monster.prototype.death = function()
 }
 
 //Monster(img, name, mind, body, spirit, melee, ranged)
-dummy = new Monster('', 'Training Dummy', 1, 1, 1, 1, 1, "./MODELS/Dummy.json");
+dummy = new Monster('', 'Training Dummy', 100, 50, 100, 3, 3, "./MODELS/Dummy.json");
 dummy.setResist('water');
 dummy.setWeak('fire');
 dummy.setTextureId(11);
