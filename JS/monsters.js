@@ -104,11 +104,51 @@ Monster.prototype.onContact = function(spell)
 	// debugger;
 }
 
+Monster.prototype.search = function()
+{
+	if(myThreeCanvas.isPlayerInRange(this.mesh))
+	{
+		sigil.targetMonster(this);
+
+		if(myThreeCanvas.isPlayerInCloseRange(this.mesh))
+		{
+			if(this.melee > 0)
+				this.attack();
+		}
+		else
+		{
+			if(this.ranged > 0)
+				this.rangedAttack();
+		}
+	}
+}
+
+Monster.prototype.attack = function()
+{
+	if(Math.random() >= 0.8)
+	{
+		//play sound
+		sigil.takeDamage(this.melee);
+	}
+	
+}
+
+Monster.prototype.rangedAttack = function()
+{
+	if(Math.random() >= 0.4)
+	{
+		//play sound
+		sigil.takeDamage(this.ranged);
+	}
+}
+
 Monster.prototype.death = function()
 {
 	//Despawn Monster
 	console.log("Monster Has Died!");
 	myThreeCanvas.scene.remove(mesh);
+
+	sigil.cancelTarget(this);
 }
 
 //Monster(img, name, mind, body, spirit, melee, ranged)

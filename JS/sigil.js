@@ -28,9 +28,9 @@ function Sigil(){
     $('#current_hp').width(sigil._currentHp);
 
 
-    $('#current_mind').width(240);
-    $('#current_body').width(240);
-    $('#current_spirit').width(240);
+    $('#current_mind').width(1);
+    $('#current_body').width(1);
+    $('#current_spirit').width(1);
     
     // setInterval(function(){
     //     sigil.draw();
