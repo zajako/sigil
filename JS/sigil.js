@@ -247,7 +247,7 @@ Sigil.prototype.selectMercury = function()
     console.log("Mercury Selected");
     sigil.material = mercury;
 
-    sigil.unlockBook2();
+    // sigil.unlockBook2();
 };
 
 Sigil.prototype.selectGold = function()
@@ -255,10 +255,10 @@ Sigil.prototype.selectGold = function()
     console.log("Gold Selected");
     sigil.material = gold;
 
-    sigil.targetMonster(dummy);
+    // sigil.targetMonster(dummy);
 
 
-    this.unlockBook3();
+    // this.unlockBook3();
 };
 
 Sigil.prototype.showSpellbook = function()
