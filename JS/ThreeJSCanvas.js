@@ -71,6 +71,7 @@ THREECanvas.prototype.loadIn = function(){
     this.loadTexture("./IMG/Textures/TempleWall6.png", 1, 1);
     this.loadTexture("./IMG/Textures/TempleWall7.png", 1, 1);
     this.loadTexture("./IMG/Textures/DummyUVs_textured.png", 1, 1);
+    
 
 //Particle Systems
     this.addParticleSystem({name: 'fire', maxParticles: 75000, spawnRate: 12500, color: 0xff6600, positionRandomness: .3, verticalSpeed: 1.33, horizontalSpeed: 1.5, velocity: new THREE.Vector3(0, 0, 0), size: 15, position: new THREE.Vector3(-500, -5, -500), velocityRandomness: 0, lifetime: .1, turbulence: 0});

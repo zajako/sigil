@@ -51,7 +51,7 @@ Projectile.prototype.playSound = function()
 	};
 	song = new THREE.Audio3D({"url":source, "reciever": camera, "onload": playWhenLoaded});
 	this.mesh.add(song);
-  radius = parseInt( 500, 10 );
+  radius = parseInt( 10, 10 );
   song.soundRadius = radius;
 
 };

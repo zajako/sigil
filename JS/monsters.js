@@ -1,22 +1,6 @@
 
 function Monster(img, name, mind, body, spirit, melee, ranged, modelPathName)
 {
-
-//model pathname
-//texture id
-
-/*
-
-	for(var k=0; k < mobtypes.length; k++)
-            {
-                if(this.map.grid[i][j] == mobtypes[k].spawncode)
-                {
-                    
-                }
-            }
-
-*/
-
     this.image = img;
     this.name = name;
     this.mind = mind;
@@ -32,7 +16,6 @@ function Monster(img, name, mind, body, spirit, melee, ranged, modelPathName)
     this.current_spirit = spirit;
     this.modelPathName = modelPathName;
     this.textureId = 0;
-
 }
 
 Monster.prototype.clone = function()
