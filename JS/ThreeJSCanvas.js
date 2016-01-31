@@ -102,9 +102,6 @@ THREECanvas.prototype.loadIn = function(){
             }
         }
     }
-
-// LoadGeometries
-    this.spawnMonster(dummy, new THREE.Vector3(this.player.x, -1.5, this.player.z), new THREE.Vector3(0,0,0));
 };
 
 THREECanvas.prototype.spawnMonster = function(monsterType, position, rotation){
@@ -257,8 +254,8 @@ THREECanvas.prototype.processTurn = function(){
 
 THREECanvas.prototype.processProjectiles = function(tick){
     for(var k=0;k<this.bullets.length;k++){
-        this.bullets[k].mesh.position.x += this.bullets[k].addX;
-        this.bullets[k].mesh.position.z += this.bullets[k].addZ;
+        this.bullets[k].mesh.position.x += (this.bullets[k].addX + this.bullets[k].xOffset);
+        this.bullets[k].mesh.position.z += (this.bullets[k].addZ + this.bullets[k].zOffset);
 
         //Movement shenanigans
         this.bullets[k].mesh.position.y = Math.sin(( 8 * tick) * degreesToRadians(45));
