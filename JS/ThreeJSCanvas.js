@@ -135,20 +135,20 @@ THREECanvas.prototype.init = function(){
     this.loadTexture("./IMG/Textures/CobbleFloor.png", 100, 100);
     this.loadTexture("./IMG/Textures/TempleWall.png", 1, 1);
     this.loadTexture("./IMG/Textures/DummyUVs_textured.png", 1, 1);
-    for(var i=0; i < this.map.grid.length; i++){
-        for(var j=0; j < this.map.grid[i].length; j++){
-            if(this.map.grid[i][j] === 0){
-                this.addWallSegment(j, i);
-            }
-            if(this.map.grid[i][j] === 2){
-                this.player.x = j * 5;
-                this.player.z = i * 5;
-                this.player.gridX = j;
-                this.player.gridZ = i;
-            }
-        }
-    }
-    this.addParticleSystem({name: 'Fire', maxParticles: 1500, color: 0x00ff00, size: 2, position: new THREE.Vector3(this.player.x, 1, this.player.z)});
+    // for(var i=0; i < this.map.grid.length; i++){
+    //     for(var j=0; j < this.map.grid[i].length; j++){
+    //         if(this.map.grid[i][j] === 0){
+    //             this.addWallSegment(j, i);
+    //         }
+    //         if(this.map.grid[i][j] === 2){
+    //             this.player.x = j * 5;
+    //             this.player.z = i * 5;
+    //             this.player.gridX = j;
+    //             this.player.gridZ = i;
+    //         }
+    //     }
+    // }
+    this.addParticleSystem({name: 'Fire', maxParticles: 250000, spawnRate: 15000, color: 0xff6600, positionRandomness: .4, verticalSpeed: 1.33, horizontalSpeed: 1.5, velocity: new THREE.Vector3(0, 0, 0), size: 3, position: new THREE.Vector3(0, 0, 0), velocityRandomness: .2, lifetime: 3, turbulence: .05});
     // this.addParticleSystem('Fire', 1500, 0xffffff, 0.1, new THREE.Vector3(this.player.x, 1, this.player.z));
     // for(var k=0; k < 50; k++){
     //     this.loadModelGeometry("./MODELS/candle2.json", new THREE.Vector3(getRandomArbitrary(-25, 25), getRandomArbitrary(1, 2), getRandomArbitrary(-25, 25)), new THREE.Vector3(0,0,0));
@@ -166,8 +166,9 @@ THREECanvas.prototype.addWallSegment = function(x, y){
 };
 
 THREECanvas.prototype.spawnPlayerProjectile = function(element, accent, targets){
+    // var projGroup = new Object3D();
     for(var i=0; i < targets.length;i++){
-        this.addMeshToScene(this.makeGeometry(THREE.SphereGeometry, .5, 16, 16), new THREE.MeshBasicMaterial({color: 0x00ff00}), new THREE.Vector3(this.player.x, 0, this.player.z), new THREE.Vector3(0,0,0), "projectile");
+        this.addMeshToScene(this.makeGeometry(THREE.SphereGeometry, .5, 16, 16), new THREE.MeshBasicMaterial({color: 0xffffff, transparent: true, opacity: .15}), new THREE.Vector3(this.player.x, 0, this.player.z), new THREE.Vector3(0,0,0), "projectile");
         var proj = new Projectile({x: this.player.gridX, y: 1, z: this.player.gridZ}, this.projectiles[this.projectiles.length - 1]);
     }
 };
@@ -206,7 +207,7 @@ THREECanvas.prototype.addParticleSystem = function(args){
 
 THREECanvas.prototype.getParticleSystemFor = function(thing){
     return this.particleSystems[0];
-}
+};
 
 THREECanvas.prototype.makeGeometry = function(geoType, width, height, depth){
     var geo = new geoType(width, height, depth);
@@ -313,9 +314,9 @@ function update()
     if (tick < 0) tick = 0;
 
     if (delta > 0) {
-        options.position.x = options.position.x;//Math.sin(tick * spawnerOptions.horizontalSpeed) * 20;
-        options.position.y = options.position.y;//Math.sin(tick * spawnerOptions.verticalSpeed) * 10;
-        options.position.z = options.position.z;//Math.sin(tick * spawnerOptions.horizontalSpeed + spawnerOptions.verticalSpeed) * 5;
+        options.position.x = Math.sin(tick * spawnerOptions.horizontalSpeed) * 20;
+        options.position.y = Math.sin(tick * spawnerOptions.verticalSpeed) * 10;
+        options.position.z = Math.sin(tick * spawnerOptions.horizontalSpeed + spawnerOptions.verticalSpeed) * 5;
 
         for (var x = 0; x < spawnerOptions.spawnRate * delta; x++) {
           // Yep, that's really it.  Spawning particles is super cheap, and once you spawn them, the rest of
@@ -325,6 +326,10 @@ function update()
     }
 
     myThreeCanvas.particleSystems[0].update(tick);
+    // myThreeCanvas.particleSystems[0].position.x = Math.sin(tick * spawnerOptions.horizontalSpeed) * 20;
+    // myThreeCanvas.particleSystems[0].position.y = Math.sin(tick * spawnerOptions.verticalSpeed) * 10;
+    // myThreeCanvas.particleSystems[0].position.z = Math.sin(tick * spawnerOptions.horizontalSpeed + spawnerOptions.verticalSpeed) * 5;
+    myThreeCanvas.camera.lookAt(myThreeCanvas.particleSystems[0].position);
 
     requestAnimationFrame(update);
 }
