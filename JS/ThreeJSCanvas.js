@@ -62,7 +62,6 @@ THREECanvas.prototype.loadIn = function(){
     this.loadTexture("./IMG/Textures/CobbleFloor2.png", 1, 1);
     this.loadTexture("./IMG/Textures/CobbleFloor3.png", 1, 1);
     this.loadTexture("./IMG/Textures/CobbleFloor4.png", 1, 1);
-
     this.loadTexture("./IMG/Textures/TempleWall.png", 1, 1);
     this.loadTexture("./IMG/Textures/TempleWall2.png", 1, 1);
     this.loadTexture("./IMG/Textures/TempleWall3.png", 1, 1);
@@ -71,6 +70,8 @@ THREECanvas.prototype.loadIn = function(){
     this.loadTexture("./IMG/Textures/TempleWall6.png", 1, 1);
     this.loadTexture("./IMG/Textures/TempleWall7.png", 1, 1);
     this.loadTexture("./IMG/Textures/DummyUVs_textured.png", 1, 1);
+    this.loadTexture("./IMG/Textures/BookUVs_painted.png", 1, 1);
+    this.loadTexture("./IMG/Textures/BookUVs_painted_GREEN.png", 1, 1);
     
 
 //Particle Systems
@@ -98,6 +99,11 @@ THREECanvas.prototype.loadIn = function(){
                 this.player.gridZ = i;
             }
             if(monsterTypeEnum[value.toString()] !== undefined)
+            {
+                this.spawnMonster(monsterTypeEnum[value.toString()], new THREE.Vector3(j * 5, -1.5, i * 5), new THREE.Vector3(0,0,0));
+            }
+
+            if(itemTypeEnum[value.toString()] !== undefined)
             {
                 this.spawnMonster(monsterTypeEnum[value.toString()], new THREE.Vector3(j * 5, -1.5, i * 5), new THREE.Vector3(0,0,0));
             }
