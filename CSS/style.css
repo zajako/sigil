@@ -33,3 +33,33 @@
 {
 	background-color: #5f2216;
 }
+
+
+
+
+
+
+
+
+body
+  background-color: #000
+  overflow: hidden
+  font-family: "Helvetica Neue", sans-serif
+  
+.information
+  background-color: rgba(0,255,255, 0.35)
+  padding: 8px 8px
+  width: 30%
+    
+  .item
+    color: #eef
+    margin: 2px auto
+    
+    input
+      width: 45px
+    input, span
+      float: right
+      margin-right: 10px
+      color: #afa
+      background-color: transparent
+      border: none
