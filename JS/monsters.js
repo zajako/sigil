@@ -217,18 +217,21 @@ Monster.prototype.death = function()
 }
 
 //Monster(img, name, mind, body, spirit, melee, ranged)
-dummy = new Monster('', 'Training Dummy', -1, 20, -1, 1, 1, "./MODELS/Dummy.json");
+dummy = new Monster('', 'Training Dummy', 100, 50, 100, 3, 3, "./MODELS/Dummy.json");
 dummy.setResist('water');
 dummy.setWeak('fire');
 dummy.setTextureId(11);
 
-goblin = new Monster('', 'Goblin', 20, 60, 50, 2, 2, "./MODELS/Dummy.json");
+goblin = new Monster('', 'Goblin', 25, 25, 50, 10, 10, "./MODELS/Goblin.json");
 goblin.setResist('fire');
 goblin.setWeak('water');
+goblin.setTextureId(16);
 
-orc = new Monster('', 'Orc', 50, 200, 200, 200, 10, "./MODELS/Dummy.json");
+
+orc = new Monster('', 'Orc', 50, 75, 50, 30, 10, "./MODELS/Orc.json");
 orc.setResist('fire');
 orc.setWeak('water');
+orc.setTextureId(15);
 
 skel = new Monster('', 'Skeleton', -1, 25, -1, 20, 0, "./MODELS/Dummy.json");
 skel.setResist('water');

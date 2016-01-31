@@ -77,6 +77,8 @@ THREECanvas.prototype.loadIn = function(){
     this.loadTexture("./IMG/UVs/BookUVs_painted.png", 1, 1);
     this.loadTexture("./IMG/UVs/BookUVs_painted_GREEN.png", 1, 1);
     this.loadTexture("./IMG/Textures/ceiling.png", 1, 1);
+    this.loadTexture("./IMG/UVs/OrcUVs.png", 1, 1);
+    this.loadTexture("./IMG/UVs/GoblinUVs.png", 1, 1);
     
 
 //Particle Systems
@@ -316,10 +318,6 @@ THREECanvas.prototype.dotProduct = function(u, v){
     u.dot( v );
 };
 
-THREECanvas.prototype.processTurn = function(){
-
-};
-
 THREECanvas.prototype.getDistanceFromVector = function(v1, v2){
     return Math.sqrt(Math.pow((v2.x - v1.x), 2) + Math.pow((v2.y - v1.y), 2));
 };
@@ -379,20 +377,10 @@ THREECanvas.prototype.processProjectiles = function(tick){
                         this.monsters[l].arrayslot = l;
                         this.monsters[l].onContact(myBullet.spell);
                         console.log("Collision "+myBullet.spell.element);
-
-
-
-                        
                     }
-
-
-                    
                 }
             }
-
-
         }
-
     }
 };
 
