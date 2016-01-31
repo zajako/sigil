@@ -1,5 +1,5 @@
 
-function Monster(img, name, mind, body, spirit, melee, ranged, spawncode, modelPathName, textureId)
+function Monster(img, name, mind, body, spirit, melee, ranged, spawncode, modelPathName)
 {
 
 //model pathname
@@ -32,7 +32,8 @@ function Monster(img, name, mind, body, spirit, melee, ranged, spawncode, modelP
     this.current_spirit = spirit;
     this.spawncode = spawncode;
     this.modelPathName = modelPathName;
-    this.textureId = textureId;
+    this.textureId = 0;
+
 }
 
 Monster.prototype.clone = function()
@@ -53,6 +54,11 @@ Monster.prototype.setMesh = function(mesh)
 Monster.prototype.setResist = function(element)
 {
 	this.resist = element;
+}
+
+Monster.prototype.setTextureId = function(id)
+{
+	this.textureId = id;
 }
 
 Monster.prototype.setWeak = function(element)
@@ -171,75 +177,76 @@ Monster.prototype.death = function()
 }
 
 //Monster(img, name, mind, body, spirit, melee, ranged)
-dummy = new Monster('', 'Training Dummy', -1, 100, -1, 0, 0, "d", "./MODELS/Dummy.json", 11);
+dummy = new Monster('', 'Training Dummy', -1, 100, -1, 0, 0, "./MODELS/Dummy.json");
 dummy.setResist('water');
 dummy.setWeak('fire');
+dummy.setTextureId(11);
 
-goblin = new Monster('', 'Goblin', 25, 25, 50, 10, 10, "g");
+goblin = new Monster('', 'Goblin', 25, 25, 50, 10, 10, "./MODELS/Dummy.json");
 goblin.setResist('fire');
 goblin.setWeak('water');
 
-orc = new Monster('', 'Orc', 50, 75, 50, 30, 10, "o");
+orc = new Monster('', 'Orc', 50, 75, 50, 30, 10, "./MODELS/Dummy.json");
 orc.setResist('fire');
 orc.setWeak('water');
 
-skel = new Monster('', 'Skeleton', -1, 25, -1, 20, 0, "s");
+skel = new Monster('', 'Skeleton', -1, 25, -1, 20, 0, "./MODELS/Dummy.json");
 skel.setResist('water');
 skel.setWeak('fire');
 
-zombie = new Monster('', 'Zombie', -1, 50, -1, 10, 0, "z");
+zombie = new Monster('', 'Zombie', -1, 50, -1, 10, 0, "./MODELS/Dummy.json");
 zombie.setResist('water');
 zombie.setWeak('fire');
 
-wight = new Monster('', 'Wight', 25, 50, -1, 35, 0, "w");
+wight = new Monster('', 'Wight', 25, 50, -1, 35, 0, "./MODELS/Dummy.json");
 wight.setResist('water');
 wight.setWeak('fire');
 
-air = new Monster('', 'Air Elemental', -1, 5, 100, 0, 40, "a");
+air = new Monster('', 'Air Elemental', -1, 5, 100, 0, 40, "./MODELS/Dummy.json");
 air.setResist('air');
 air.setWeak('earth');
 
-earth = new Monster('', 'Earth Elemental', -1, 75, 100, 40, 0, "e");
+earth = new Monster('', 'Earth Elemental', -1, 75, 100, 40, 0, "./MODELS/Dummy.json");
 earth.setResist('earth');
 earth.setWeak('air');
 
-water = new Monster('', 'Water Elemental', -1, 15, 100, 30, 10, "w");
+water = new Monster('', 'Water Elemental', -1, 15, 100, 30, 10, "./MODELS/Dummy.json");
 water.setResist('water');
 water.setWeak('fire');
 
-fire = new Monster('', 'Fire Elemental', -1, 25, 100, 20, 20, "f");
+fire = new Monster('', 'Fire Elemental', -1, 25, 100, 20, 20, "./MODELS/Dummy.json");
 fire.setResist('fire');
 fire.setWeak('water');
 
-dwarf = new Monster('', 'Dwarf Ruffian', 50, 75, 40, 30, 0, "r");
+dwarf = new Monster('', 'Dwarf Ruffian', 50, 75, 40, 30, 0, "./MODELS/Dummy.json");
 dwarf.setResist('earth');
 dwarf.setWeak('air');
 
-elf = new Monster('', 'Elf Hunter', 40, 50, 75, 10, 30, "h");
+elf = new Monster('', 'Elf Hunter', 40, 50, 75, 10, 30, "./MODELS/Dummy.json");
 elf.setResist('air');
 elf.setWeak('earth');
 
-human = new Monster('', 'Prospector', 50, 50, 50, 20, 10, "p");
+human = new Monster('', 'Prospector', 50, 50, 50, 20, 10, "./MODELS/Dummy.json");
 human.setResist('air');
 human.setWeak('earth');
 
-golem = new Monster('', 'Golem', -1, 100, -1, 40, 0, "G");
+golem = new Monster('', 'Golem', -1, 100, -1, 40, 0, "./MODELS/Dummy.json");
 golem.setResist('earth');
 golem.setWeak('air');
 
-var mobtypes = [
-	dummy,
-	goblin,
-	orc,
-	skel,
-	zombie,
-	wight,
-	air,
-	earth,
-	water,
-	fire,
-	dwarf,
-	elf,
-	human,
-	golem
-];
+var monsterTypeEnum = {
+	"G" : "golem",
+	"p" : "human",
+	"h" : "elf",
+	"r" : "dwarf",
+	"f" : "fire",
+	"w" : "water",
+	"e" : "earth",
+	"a" : "air",
+	"w" : "wight",
+	"z" : "zombie",
+	"s" : "skel",
+	"o" : "orc",
+	"g" : "goblin",
+	"d" : "dummy"
+};

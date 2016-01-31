@@ -96,9 +96,10 @@ THREECanvas.prototype.loadIn = function(){
                 this.player.gridX = j;
                 this.player.gridZ = i;
             }
-            // if($.inArray(value, monsterTypeEnum)){
-            //     this.spawnMonster(monsterTypeEnum[value], position, rotation);
-            // }
+            if($.inArray(value, monsterTypeEnum))
+            {
+                this.spawnMonster(monsterTypeEnum[value], value, 0);
+            }
         }
     }
 };
