@@ -106,13 +106,11 @@ THREECanvas.prototype.loadIn = function(){
 
 THREECanvas.prototype.spawnMonster = function(monsterType, position, rotation){
     var myMonster = monsterType.clone();
-    var monsterMesh = this.loadModelGeometry(monsterType.modelPathName, position, rotation, new THREE.MeshBasicMaterial({color: 0xffffff, map: this.textures[monsterType.textureId]}));
-    myMonster.setMesh(monsterMesh);
+    this.loadModelGeometry(monsterType.modelPathName, position, rotation, new THREE.MeshBasicMaterial({color: 0xffffff, map: this.textures[monsterType.textureId]}), myMonster);
     this.monsters.push(myMonster);
 };
 
 THREECanvas.prototype.spawnPlayerProjectile = function(element, accent, targets, spell){
-    // var projGroup = new Object3D();
     for(var i=0; i < targets.length;i++){
         var myMesh = this.addMeshToScene(this.makeGeometry(THREE.SphereGeometry, 0.5,16,16),
             new THREE.MeshBasicMaterial({color: 0xffffff, visible: false}),
@@ -228,10 +226,10 @@ THREECanvas.prototype.loadTexture = function(name, repeatX, repeatY){
     this.textures.push(texture);
 };
 
-THREECanvas.prototype.loadModelGeometry = function(pathName, position, rotation, material, type){
+THREECanvas.prototype.loadModelGeometry = function(pathName, position, rotation, material, myMonster){
     var myCanvas = this;
     var test = this.loader.load(pathName, function(geometry){
-        myCanvas.addMeshToScene(geometry, material === undefined ? myCanvas.materials[0] : material, position, rotation, type);
+        myMonster.setMesh(myCanvas.addMeshToScene(geometry, material === undefined ? myCanvas.materials[0] : material, position, rotation));
     });
 };
 
@@ -241,11 +239,25 @@ THREECanvas.prototype.setNeedUpdate = function(value){
 
 THREECanvas.prototype.updatePosition = function(){
     this.camera.position.set(this.player.x, 0.5, this.player.z);
+    this.updateEnemyRotations(this.camera.position);
 };
 
 THREECanvas.prototype.updateRotation = function(deltaTime){
     this.player.lerpRotation(deltaTime);
     this.camera.rotation.set(0,degreesToRadians(this.player.rotY),0);
+};
+
+THREECanvas.prototype.updateEnemyRotations = function(playerLocation){
+    for(var i=0; i<this.monsters.length;i++){
+        //This checks to see if the mesh has been instantiated and placed yet, probably a better way to do this.
+        if(this.monsters[i].mesh.position !== undefined){
+            this.monsters[i].mesh.lookAt(playerLocation);
+        }
+    }
+};
+
+THREECanvas.prototype.dotProduct = function(u, v){
+    u.dot( v );
 };
 
 THREECanvas.prototype.processTurn = function(){
@@ -309,9 +321,6 @@ function update()
     myThreeCanvas.updatePosition();
     myThreeCanvas.updateRotation(deltaTime);
 
-    // for(var i=0; i < myThreeCanvas.enemies.length; i++){
-    //     myThreeCanvas.enemies[i].position;
-    // }
     var delta = clock.getDelta() * spawnerOptions[0].timeScale;
     tick += delta;
 
@@ -327,10 +336,5 @@ function update()
 
     requestAnimationFrame(update);
 }
-
 requestAnimationFrame(update);
 });
-
-
-
-
