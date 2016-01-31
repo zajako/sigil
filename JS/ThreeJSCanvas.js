@@ -277,12 +277,14 @@ THREECanvas.prototype.updateEnemyTargeting = function(){
             var distance = this.getDistanceFromVector(this.camera.position, this.monsters[i].mesh.position);
             if(distance <= 3 && distance > 1)
             {
+                sigil.targetMonster(this.monsters[i]);
                 if(this.monsters[i].ranged > 0)
                     this.monsters[i].rangedAttack();
 
             }
             else if(distance <= 1)
             {
+                sigil.targetMonster(this.monsters[i]);
                 if(this.monsters[i].melee > 0)
                     this.monsters[i].attack();
             }
@@ -312,6 +314,8 @@ THREECanvas.prototype.processProjectiles = function(tick){
     for(var k=0;k<this.bulletGroups.length;k++){
         for(var j=0;j<this.bulletGroups[k].length;j++){
             var myBullet = this.bulletGroups[k][j];
+
+            // console.log("Element "+myBullet.spell.element);
 
             myBullet.mesh.position.x = myBullet.position.x * 5 + myBullet.xOffset;
             myBullet.mesh.position.z = myBullet.position.z * 5 + myBullet.zOffset;
@@ -347,14 +351,36 @@ THREECanvas.prototype.processProjectiles = function(tick){
 
             myBullet.position.x += myBullet.addX;
             myBullet.position.z += myBullet.addZ;
-        }
-        for(var l=0;l<this.monsters.length;l++){
-            var distanceToMonster = this.getDistanceFromVector(this.bulletGroups[k][0].mesh.position, this.monsters[l].mesh.position);
 
-            if(Math.abs(distanceToMonster) < 4.5){
-                console.log("Collision");
+
+
+            for(var l=0;l<this.monsters.length;l++){
+                var distanceToMonster = this.getDistanceFromVector(this.bulletGroups[k][0].mesh.position, this.monsters[l].mesh.position);
+
+                if(Math.abs(distanceToMonster) < 4.5){
+                    // debugger;
+                    if(!myBullet.isHit)
+                    {
+                        // debugger;
+                        myBullet.isHit = true;
+                        sigil.targetMonster(this.monsters[l]);
+                        this.monsters[l].arrayslot = l;
+                        this.monsters[l].onContact(myBullet.spell);
+                        console.log("Collision "+myBullet.spell.element);
+
+
+
+                        
+                    }
+
+
+                    
+                }
             }
+
+
         }
+
     }
 };
 

@@ -3,6 +3,7 @@ function Projectile(position, mesh, element){
    this.mesh = mesh;
    this.spell = "";
    this.element = element;
+   this.isHit = false;
 
    this.addX = 0;
    this.addZ = 0;

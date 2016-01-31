@@ -18,6 +18,7 @@ function Monster(img, name, mind, body, spirit, melee, ranged, modelPathName)
     this.textureId = 0;
     this.gridX = 0;
     this.gridZ = 0;
+    this.arrayslot = 0;
 }
 
 Monster.prototype.clone = function()
@@ -29,6 +30,8 @@ Monster.prototype.clone = function()
     }
     return temp;
 };
+
+
 
 Monster.prototype.setMesh = function(mesh)
 {
@@ -182,6 +185,23 @@ Monster.prototype.rangedAttack = function()
 	}
 }
 
+Monster.prototype.isDead = function()
+{
+	if(this.current_spirit <= 0 && this.spirit > 0)
+	{
+		return true;
+	}
+	if(this.current_body <= 0 && this.body > 0)
+	{
+		return true;
+	}
+	if(this.current_mind <= 0 && this.mind > 0)
+	{
+		return true;
+	}
+	return false;
+}
+
 Monster.prototype.death = function()
 {
 	//Despawn Monster
@@ -190,10 +210,14 @@ Monster.prototype.death = function()
 	// myThreeCanvas.scene.remove(self);
 	// myThreeCanvas.monsters.remove(mesh);
 	
+
+	var m = this.mesh;
+    myThreeCanvas.monsters.splice(this.arrayslot, 1);
+    myThreeCanvas.scene.remove(m);
 }
 
 //Monster(img, name, mind, body, spirit, melee, ranged)
-dummy = new Monster('', 'Training Dummy', 100, 100, 50, 1, 1, "./MODELS/Dummy.json");
+dummy = new Monster('', 'Training Dummy', 1, 1, 1, 1, 1, "./MODELS/Dummy.json");
 dummy.setResist('water');
 dummy.setWeak('fire');
 dummy.setTextureId(11);
