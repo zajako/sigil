@@ -1,14 +1,5 @@
 
 
-// From http://blog.sklambert.com/html5-canvas-game-html5-audio-and-finishing-touches/
-  var source = "http://blog.sklambert.com/wp-content/uploads/2012/09/sounds/kick_shock.mp3",
-      scene = new THREE.Scene(),
-      camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 0.1, 1000 ),
-      renderer = new THREE.WebGLRenderer(),
-      playWhenLoaded,
-      song,
-      radius;
-
 function Projectile(position, mesh){
    this.position = position;
    this.mesh = mesh;
@@ -50,9 +41,9 @@ Projectile.prototype.playSound = function()
 		}
 	}
 
-	scene = myThreeCanvas.scene;
-	camera = myThreeCanvas.player;
-	renderer = myThreeCanvas.renderer;
+	var scene = myThreeCanvas.scene;
+	var camera = myThreeCanvas.player;
+	var renderer = myThreeCanvas.renderer;
 	playWhenLoaded = function()
 	{
 	    this.loop = true;
