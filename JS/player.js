@@ -22,24 +22,25 @@ Player.prototype.moveForward = function(){
             this.gridZ -= 1;
         }
     }
-    else if(this.rotY == radiansToDegrees(Math.PI / 2) || this.rotY == radiansToDegrees((-3 * Math.PI / 2))){
+    else if(this.rotY == 90 || this.rotY == -270){
         if(this.grid[this.gridZ][this.gridX - 1] !== 0){
             this.x -= 5;
             this.gridX -= 1;
         }
     }
-    else if(this.rotY == radiansToDegrees((3 * Math.PI / 2)) || this.rotY == radiansToDegrees(-Math.PI / 2)){
+    else if(this.rotY == 270 || this.rotY == -90){
         if(this.grid[this.gridZ][this.gridX + 1] !== 0){
             this.x += 5;
             this.gridX += 1;
         }
     }
-    else if(this.rotY == radiansToDegrees(Math.PI) || this.rotY == radiansToDegrees(-Math.PI)){
+    else if(this.rotY == 180 || this.rotY == -180){
         if(this.grid[this.gridZ + 1][this.gridX] !== 0){
             this.z += 5;
             this.gridZ += 1;
         }
     }
+    myThreeCanvas.playerMoved();
 };
 
 Player.prototype.moveBackward = function(grid){
@@ -49,13 +50,13 @@ Player.prototype.moveBackward = function(grid){
             this.gridZ += 1;
         }
     }
-    else if(this.rotY == radiansToDegrees(Math.PI / 2) || this.rotY == radiansToDegrees((-3 * Math.PI / 2))){
+    else if(this.rotY == 90 || -270){
         if(this.grid[this.gridZ][this.gridX + 1] !== 0){
             this.x += 5;
             this.gridX += 1;
         }
     }
-    else if(this.rotY == radiansToDegrees((3 * Math.PI / 2)) || this.rotY == radiansToDegrees(-Math.PI / 2)){
+    else if(this.rotY == 270 || -90){
         if(this.grid[this.gridZ][this.gridX - 1] !== 0){
             this.x -= 5;
             this.gridX -= 1;
@@ -67,6 +68,7 @@ Player.prototype.moveBackward = function(grid){
             this.gridZ -= 1;
         }
     }
+    myThreeCanvas.playerMoved();
 };
 
 Player.prototype.setTurnLeft = function(){

@@ -106,6 +106,7 @@ THREECanvas.prototype.loadIn = function(){
 
 THREECanvas.prototype.spawnMonster = function(monsterType, position, rotation){
     var myMonster = monsterType.clone();
+    myMonster.setGridLocation(position.x / 5, position.z /5);
     this.loadModelGeometry(monsterType.modelPathName, position, rotation, new THREE.MeshBasicMaterial({color: 0xffffff, map: this.textures[monsterType.textureId]}), myMonster);
     this.monsters.push(myMonster);
 };
@@ -239,7 +240,6 @@ THREECanvas.prototype.setNeedUpdate = function(value){
 
 THREECanvas.prototype.updatePosition = function(){
     this.camera.position.set(this.player.x, 0.5, this.player.z);
-    this.updateEnemyRotations(this.camera.position);
 };
 
 THREECanvas.prototype.updateRotation = function(deltaTime){
@@ -247,13 +247,31 @@ THREECanvas.prototype.updateRotation = function(deltaTime){
     this.camera.rotation.set(0,degreesToRadians(this.player.rotY),0);
 };
 
-THREECanvas.prototype.updateEnemyRotations = function(playerLocation){
+THREECanvas.prototype.updateEnemyRotations = function(){
     for(var i=0; i<this.monsters.length;i++){
         //This checks to see if the mesh has been instantiated and placed yet, probably a better way to do this.
         if(this.monsters[i].mesh.position !== undefined){
-            this.monsters[i].mesh.lookAt(playerLocation);
+            this.monsters[i].mesh.lookAt(this.camera.position);
         }
     }
+};
+
+THREECanvas.prototype.updateEnemyTargeting = function(){
+    for(var i=0; i<this.monsters.length;i++){
+        //This checks to see if the mesh has been instantiated and placed yet, probably a better way to do this.
+        if(this.monsters[i].mesh.position !== undefined){
+            var distance = Math.sqrt(Math.pow((this.player.gridX - this.monsters[i].gridX), 2) + Math.pow((this.player.gridZ - this.monsters[i].gridZ), 2));
+            if(distance < 3){
+
+            }
+        }
+    }
+};
+
+THREECanvas.prototype.playerMoved = function(){
+    this.updatePosition();
+    this.updateEnemyTargeting();
+    this.updateEnemyRotations();
 };
 
 THREECanvas.prototype.dotProduct = function(u, v){
@@ -295,6 +313,7 @@ THREECanvas.prototype.processParticles = function(delta, tick){
 };
 
 $().ready(function(){
+    myThreeCanvas.playerMoved();
 $("body").keypress(function(event){
     switch(event.which){
         case 119:
@@ -318,7 +337,6 @@ function update()
 {
     this.deltaTime = clock.getDelta();
     myThreeCanvas.render();
-    myThreeCanvas.updatePosition();
     myThreeCanvas.updateRotation(deltaTime);
 
     var delta = clock.getDelta() * spawnerOptions[0].timeScale;

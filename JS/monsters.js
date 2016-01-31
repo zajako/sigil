@@ -32,38 +32,44 @@ function Monster(img, name, mind, body, spirit, melee, ranged, modelPathName)
     this.current_spirit = spirit;
     this.modelPathName = modelPathName;
     this.textureId = 0;
-
+    this.gridX = 0;
+    this.gridZ = 0;
 }
 
 Monster.prototype.clone = function()
 {
 	var temp = new Monster();
-    for (myvar in this)
+    for (var myVar in this)
     {
-        temp[myvar] = this[myvar];
+        temp[myVar] = this[myVar];
     }
     return temp;
-}
+};
 
 Monster.prototype.setMesh = function(mesh)
 {
 	this.mesh = mesh;
-}
+};
 
 Monster.prototype.setResist = function(element)
 {
 	this.resist = element;
-}
+};
 
 Monster.prototype.setTextureId = function(id)
 {
 	this.textureId = id;
-}
+};
 
 Monster.prototype.setWeak = function(element)
 {
 	this.weak = element;
-}
+};
+
+Monster.prototype.setGridLocation = function(x, z){
+  this.gridX = x;
+  this.gridZ = z;
+};
 
 Monster.prototype.onContact = function(spell)
 {
