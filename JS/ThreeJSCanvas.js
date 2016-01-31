@@ -96,9 +96,9 @@ THREECanvas.prototype.loadIn = function(){
                 this.player.gridX = j;
                 this.player.gridZ = i;
             }
-            if($.inArray(value, monsterTypeEnum))
+            if($.inArray(value, monsterTypeEnum) != -1)
             {
-                this.spawnMonster(monsterTypeEnum[value], value, 0);
+                this.spawnMonster(monsterTypeEnum[value], new THREE.Vector3(j * 5, -1.5, i * 5), 0);
             }
         }
     }

@@ -1,5 +1,5 @@
 
-function Monster(img, name, mind, body, spirit, melee, ranged, spawncode, modelPathName)
+function Monster(img, name, mind, body, spirit, melee, ranged, modelPathName)
 {
 
 //model pathname
@@ -30,7 +30,6 @@ function Monster(img, name, mind, body, spirit, melee, ranged, spawncode, modelP
     this.current_mind = mind;
     this.current_body = body;
     this.current_spirit = spirit;
-    this.spawncode = spawncode;
     this.modelPathName = modelPathName;
     this.textureId = 0;
 
