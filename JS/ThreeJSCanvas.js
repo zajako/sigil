@@ -77,6 +77,8 @@ THREECanvas.prototype.loadIn = function(){
     this.loadTexture("./IMG/UVs/BookUVs_painted.png", 1, 1);
     this.loadTexture("./IMG/UVs/BookUVs_painted_GREEN.png", 1, 1);
     this.loadTexture("./IMG/Textures/ceiling.png", 1, 1);
+    this.loadTexture("./IMG/UVs/OrcUVs.png", 1, 1);
+    this.loadTexture("./IMG/UVs/GoblinUVs.png", 1, 1);
     
 
 //Particle Systems

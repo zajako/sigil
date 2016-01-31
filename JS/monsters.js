@@ -222,13 +222,16 @@ dummy.setResist('water');
 dummy.setWeak('fire');
 dummy.setTextureId(11);
 
-goblin = new Monster('', 'Goblin', 25, 25, 50, 10, 10, "./MODELS/Dummy.json");
+goblin = new Monster('', 'Goblin', 25, 25, 50, 10, 10, "./MODELS/Goblin.json");
 goblin.setResist('fire');
 goblin.setWeak('water');
+goblin.setTextureId(16);
 
-orc = new Monster('', 'Orc', 50, 75, 50, 30, 10, "./MODELS/Dummy.json");
+
+orc = new Monster('', 'Orc', 50, 75, 50, 30, 10, "./MODELS/Orc.json");
 orc.setResist('fire');
 orc.setWeak('water');
+orc.setTextureId(15);
 
 skel = new Monster('', 'Skeleton', -1, 25, -1, 20, 0, "./MODELS/Dummy.json");
 skel.setResist('water');
