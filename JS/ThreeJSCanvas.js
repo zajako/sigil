@@ -10,6 +10,24 @@ Projectile.prototype.getWorldPosition = function(){
     return {x: this.position.x * 5, y: this.position.y, z: this.position.z * 5};
 };
 
+function radiansToDegrees(radians){
+    return 180 * radians / Math.PI;
+}
+
+function degreesToRadians(degrees){
+    return degrees * (Math.PI / 180);
+}
+
+function lerpTowards(value, target, step){
+    if(value < target){
+        value += step;
+    }
+    else if(value > target){
+        value -= step;
+    }
+    return value;
+}
+
 function Player(grid){
     this.x = 0;
     this.z = 0;
@@ -27,19 +45,19 @@ Player.prototype.moveForward = function(){
             this.gridZ -= 1;
         }
     }
-    else if(this.rotY == Math.PI / 2 || this.rotY == (-3 * Math.PI / 2)){
+    else if(this.rotY == radiansToDegrees(Math.PI / 2) || this.rotY == radiansToDegrees((-3 * Math.PI / 2))){
         if(this.grid[this.gridZ][this.gridX - 1] !== 0){
             this.x -= 5;
             this.gridX -= 1;
         }
     }
-    else if(this.rotY == (3 * Math.PI / 2) || this.rotY == -Math.PI / 2){
+    else if(this.rotY == radiansToDegrees((3 * Math.PI / 2)) || this.rotY == radiansToDegrees(-Math.PI / 2)){
         if(this.grid[this.gridZ][this.gridX + 1] !== 0){
             this.x += 5;
             this.gridX += 1;
         }
     }
-    else if(this.rotY == Math.PI || this.rotY == -Math.PI){
+    else if(this.rotY == radiansToDegrees(Math.PI) || this.rotY == radiansToDegrees(-Math.PI)){
         if(this.grid[this.gridZ + 1][this.gridX] !== 0){
             this.z += 5;
             this.gridZ += 1;
@@ -54,19 +72,19 @@ Player.prototype.moveBackward = function(grid){
             this.gridZ += 1;
         }
     }
-    else if(this.rotY == Math.PI / 2 || this.rotY == (-3 * Math.PI / 2)){
+    else if(this.rotY == radiansToDegrees(Math.PI / 2) || this.rotY == radiansToDegrees((-3 * Math.PI / 2))){
         if(this.grid[this.gridZ][this.gridX + 1] !== 0){
             this.x += 5;
             this.gridX += 1;
         }
     }
-    else if(this.rotY == (3 * Math.PI / 2) || this.rotY == -Math.PI / 2){
+    else if(this.rotY == radiansToDegrees((3 * Math.PI / 2)) || this.rotY == radiansToDegrees(-Math.PI / 2)){
         if(this.grid[this.gridZ][this.gridX - 1] !== 0){
             this.x -= 5;
             this.gridX -= 1;
         }
     }
-    else if(this.rotY == Math.PI || this.rotY == -Math.PI){
+    else if(this.rotY == 180 || this.rotY == -180){
         if(this.grid[this.gridZ - 1][this.gridX] !== 0){
             this.z -= 5;
             this.gridZ -= 1;
@@ -75,32 +93,23 @@ Player.prototype.moveBackward = function(grid){
 };
 
 Player.prototype.setTurnLeft = function(){
-    if(this.rotY + Math.PI / 2 >= Math.PI * 2){
-        this.desiredRotY = 0;
-    }
-    else{
-        this.desiredRotY += (Math.PI / 2);
-    }
+    this.desiredRotY += 90;
 };
 
 Player.prototype.setTurnRight = function(){
-    if(this.rotY - Math.PI / 2 <= Math.PI * -2){
-        this.desiredRotY = 0;
-    }
-    else{
-        this.desiredRotY -= (Math.PI / 2);
-    }
-};
-
-Player.prototype.facingEnum = {
-    "Forward" : 0,
-    "Backward" : Math.PI,
-    "Left" : 3 * Math.PI / 2,
-    "Right" : Math.PI / 2
+    this.desiredRotY -= 90;
 };
 
 Player.prototype.lerpRotation = function(deltaTime){
-    this.rotY = this.desiredRotY;
+    console.log(this.rotY);
+    console.log(this.desiredRotY);
+    if(this.rotY != this.desiredRotY){
+        this.rotY = lerpTowards(this.rotY, this.desiredRotY, 1);
+    }
+    if(this.rotY == 360 || this.rotY == -360){
+        this.rotY = 0;
+        this.desiredRotY = 0;
+    }
 };
 
 function THREECanvas(){
@@ -135,19 +144,19 @@ THREECanvas.prototype.init = function(){
     this.loadTexture("./IMG/Textures/CobbleFloor.png", 100, 100);
     this.loadTexture("./IMG/Textures/TempleWall.png", 1, 1);
     this.loadTexture("./IMG/Textures/DummyUVs_textured.png", 1, 1);
-    // for(var i=0; i < this.map.grid.length; i++){
-    //     for(var j=0; j < this.map.grid[i].length; j++){
-    //         if(this.map.grid[i][j] === 0){
-    //             this.addWallSegment(j, i);
-    //         }
-    //         if(this.map.grid[i][j] === 2){
-    //             this.player.x = j * 5;
-    //             this.player.z = i * 5;
-    //             this.player.gridX = j;
-    //             this.player.gridZ = i;
-    //         }
-    //     }
-    // }
+    for(var i=0; i < this.map.grid.length; i++){
+        for(var j=0; j < this.map.grid[i].length; j++){
+            if(this.map.grid[i][j] === 0){
+                this.addWallSegment(j, i);
+            }
+            if(this.map.grid[i][j] === 2){
+                this.player.x = j * 5;
+                this.player.z = i * 5;
+                this.player.gridX = j;
+                this.player.gridZ = i;
+            }
+        }
+    }
     this.addParticleSystem({name: 'Fire', maxParticles: 250000, spawnRate: 15000, color: 0xff6600, positionRandomness: .4, verticalSpeed: 1.33, horizontalSpeed: 1.5, velocity: new THREE.Vector3(0, 0, 0), size: 3, position: new THREE.Vector3(0, 0, 0), velocityRandomness: .2, lifetime: 3, turbulence: .05});
     // this.addParticleSystem('Fire', 1500, 0xffffff, 0.1, new THREE.Vector3(this.player.x, 1, this.player.z));
     // for(var k=0; k < 50; k++){
@@ -274,7 +283,7 @@ THREECanvas.prototype.updatePosition = function(){
 
 THREECanvas.prototype.updateRotation = function(deltaTime){
     this.player.lerpRotation(deltaTime);
-    this.camera.rotation.set(0,this.player.rotY,0);
+    this.camera.rotation.set(0,degreesToRadians(this.player.rotY),0);
 };
 
 THREECanvas.prototype.processTurn = function(){
@@ -329,7 +338,7 @@ function update()
     // myThreeCanvas.particleSystems[0].position.x = Math.sin(tick * spawnerOptions.horizontalSpeed) * 20;
     // myThreeCanvas.particleSystems[0].position.y = Math.sin(tick * spawnerOptions.verticalSpeed) * 10;
     // myThreeCanvas.particleSystems[0].position.z = Math.sin(tick * spawnerOptions.horizontalSpeed + spawnerOptions.verticalSpeed) * 5;
-    myThreeCanvas.camera.lookAt(myThreeCanvas.particleSystems[0].position);
+    // myThreeCanvas.camera.lookAt(myThreeCanvas.particleSystems[0].position);
 
     requestAnimationFrame(update);
 }
