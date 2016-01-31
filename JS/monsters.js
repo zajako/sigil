@@ -1,5 +1,5 @@
 
-function Monster(img, name, mind, body, spirit, melee, ranged, spawncode)
+function Monster(img, name, mind, body, spirit, melee, ranged, spawncode, modelPathName, textureId)
 {
 
 //model pathname
@@ -31,6 +31,8 @@ function Monster(img, name, mind, body, spirit, melee, ranged, spawncode)
     this.current_body = body;
     this.current_spirit = spirit;
     this.spawncode = spawncode;
+    this.modelPathName = modelPathName;
+    this.textureId = textureId;
 }
 
 Monster.prototype.clone = function()
@@ -169,7 +171,7 @@ Monster.prototype.death = function()
 }
 
 //Monster(img, name, mind, body, spirit, melee, ranged)
-dummy = new Monster('', 'Training Dummy', -1, 100, -1, 0, 0, "d");
+dummy = new Monster('', 'Training Dummy', -1, 100, -1, 0, 0, "d", "./MODELS/Dummy.json", 11);
 dummy.setResist('water');
 dummy.setWeak('fire');
 
