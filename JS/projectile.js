@@ -1,5 +1,3 @@
-
-
 function Projectile(position, mesh){
    this.position = position;
    this.mesh = mesh;

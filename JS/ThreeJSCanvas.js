@@ -40,34 +40,10 @@ function THREECanvas(){
 THREECanvas.prototype.init = function(){
     this.renderer.setSize(this.width, this.height);
     document.body.appendChild( this.renderer.domElement );
-    this.loadTexture("./IMG/Textures/CobbleFloor.png", 100, 100);
-    this.loadTexture("./IMG/Textures/CobbleFloor2.png", 100, 100);
-    this.loadTexture("./IMG/Textures/CobbleFloor3.png", 100, 100);
-    this.loadTexture("./IMG/Textures/CobbleFloor4.png", 100, 100);
-
-    this.loadTexture("./IMG/Textures/TempleWall.png", 1, 1);
-    this.loadTexture("./IMG/Textures/TempleWall2.png", 1, 1);
-    this.loadTexture("./IMG/Textures/TempleWall3.png", 1, 1);
-    this.loadTexture("./IMG/Textures/TempleWall4.png", 1, 1);
-    this.loadTexture("./IMG/Textures/DummyUVs_textured.png", 1, 1);
-
-    var tempenemytexture = 8;
-    var floor = Math.floor(Math.random() * 4);
 
 
-    for(var i=0; i < this.map.grid.length; i++){
-        for(var j=0; j < this.map.grid[i].length; j++){
-            if(this.map.grid[i][j] === 0){
-                this.addWallSegment(j, i);
-            }
-            if(this.map.grid[i][j] === 2){
-                this.player.x = j * 5;
-                this.player.z = i * 5;
-                this.player.gridX = j;
-                this.player.gridZ = i;
-            }
-        }
-    }
+    this.loadIn()
+
     this.addParticleSystem({name: 'Fire', maxParticles: 250000, spawnRate: 15000, color: 0xff6600, positionRandomness: .4, verticalSpeed: 1.33, horizontalSpeed: 1.5, velocity: new THREE.Vector3(0, 0, 0), size: 3, position: new THREE.Vector3(0, 0, 0), velocityRandomness: .2, lifetime: 3, turbulence: .05});
     // this.addParticleSystem('Fire', 1500, 0xffffff, 0.1, new THREE.Vector3(this.player.x, 1, this.player.z));
     // for(var k=0; k < 50; k++){
@@ -77,8 +53,6 @@ THREECanvas.prototype.init = function(){
     //var proj = new Projectile({x: this.player.gridX, y: 1, z: this.player.gridZ}, this.projectiles[this.projectiles.length - 1]);
 
     
-    this.loadModelGeometry("./MODELS/Dummy.json", new THREE.Vector3(this.player.x,-1.5,this.player.z), new THREE.Vector3(0,0,0), new THREE.MeshBasicMaterial({color: 0xffffff, map: this.textures[tempenemytexture]}), "enemy");
-    this.addMeshToScene(this.makeGeometry(THREE.BoxGeometry, 500, 500, 0.01), new THREE.MeshBasicMaterial({color: 0xffffff, map: this.textures[floor]}), new THREE.Vector3(0, -2, 0), new THREE.Vector3(Math.PI / 2,0,0));
 };
 
 function getRandomArbitrary(min, max) {
@@ -90,6 +64,47 @@ THREECanvas.prototype.addWallSegment = function(x, y)
     var wall = Math.floor(Math.random() * 4 + 4);
 
     this.addMeshToScene(this.makeGeometry(THREE.BoxGeometry, 5, 5, 5), new THREE.MeshBasicMaterial({color: 0xffffff, map: this.textures[wall]}), new THREE.Vector3(x * 5, 0.5, y * 5), new THREE.Vector3(0,0,0));
+};
+
+THREECanvas.prototype.addFloorSegment = function(x, y){
+    var floor = Math.floor(Math.random() * 4);
+
+    this.addMeshToScene(this.makeGeometry(THREE.BoxGeometry, 5, 5, 0.1), new THREE.MeshBasicMaterial({color: 0xffffff, map: this.textures[floor], side: THREE.DoubleSide}), new THREE.Vector3(x * 5, -2, y * 5), new THREE.Vector3(Math.PI / 2,0,0));
+};
+
+THREECanvas.prototype.loadIn = function(){
+//Load textures
+    this.loadTexture("./IMG/Textures/CobbleFloor.png", 1, 1);
+    this.loadTexture("./IMG/Textures/CobbleFloor2.png", 1, 1);
+    this.loadTexture("./IMG/Textures/CobbleFloor3.png", 1, 1);
+    this.loadTexture("./IMG/Textures/CobbleFloor4.png", 1, 1);
+
+    this.loadTexture("./IMG/Textures/TempleWall.png", 1, 1);
+    this.loadTexture("./IMG/Textures/TempleWall2.png", 1, 1);
+    this.loadTexture("./IMG/Textures/TempleWall3.png", 1, 1);
+    this.loadTexture("./IMG/Textures/TempleWall4.png", 1, 1);
+    this.loadTexture("./IMG/Textures/DummyUVs_textured.png", 1, 1);
+
+//LoadWalls and floor
+    for(var i=0; i < this.map.grid.length; i++){
+        for(var j=0; j < this.map.grid[i].length; j++){
+            if(this.map.grid[i][j] === 0){
+                this.addWallSegment(j, i);
+            }
+            if(this.map.grid[i][j] !== 0){
+                this.addFloorSegment(j, i);
+            }
+            if(this.map.grid[i][j] === 2){
+                this.player.x = j * 5;
+                this.player.z = i * 5;
+                this.player.gridX = j;
+                this.player.gridZ = i;
+            }
+        }
+    }
+
+//LoadGeometries
+    this.loadModelGeometry("./MODELS/Dummy.json", new THREE.Vector3(this.player.x,-1.5,this.player.z), new THREE.Vector3(0,0,0), new THREE.MeshBasicMaterial({color: 0xffffff, map: this.textures[8]}), "enemy");
 };
 
 THREECanvas.prototype.spawnPlayerProjectile = function(element, accent, targets, spell){
@@ -111,13 +126,11 @@ THREECanvas.prototype.spawnPlayerProjectile = function(element, accent, targets,
         }
         else if(this.player.rotY == radiansToDegrees(Math.PI / 2) || this.player.rotY == radiansToDegrees((-3 * Math.PI / 2))){
             if(this.player.grid[this.player.gridZ][this.player.gridX - 1] !== 0){
-
                 proj.addX = -0.5;
             }
         }
         else if(this.player.rotY == radiansToDegrees((3 * Math.PI / 2)) || this.player.rotY == radiansToDegrees(-Math.PI / 2)){
             if(this.player.grid[this.player.gridZ][this.player.gridX + 1] !== 0){
-
                 proj.addX = 0.5;
             }
         }
@@ -126,11 +139,6 @@ THREECanvas.prototype.spawnPlayerProjectile = function(element, accent, targets,
                 proj.addZ = 0.5;
             }
         }
-
-        // debugger;
-
-        
-
         this.bullets.push(proj);
     }
 };
