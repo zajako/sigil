@@ -116,8 +116,10 @@ THREECanvas.prototype.spawnPlayerProjectile = function(element, accent, targets,
             new THREE.Vector3(0,0,0), "projectile");
 
 
+
         var proj = new Projectile({x: this.player.gridX, y: 1, z: this.player.gridZ}, this.projectiles[this.projectiles.length - 1]);
         proj.setSpell(spell);
+        proj.playSound();
 
         if(this.player.rotY === 0){
             if(this.player.grid[this.player.gridZ - 1][this.player.gridX] !== 0){
@@ -321,7 +323,7 @@ function update()
             var differencez = myThreeCanvas.monsters[x2].mesh.position.z - myThreeCanvas.bullets[x].mesh.position.z;
             var differencex = myThreeCanvas.monsters[x2].mesh.position.x - myThreeCanvas.bullets[x].mesh.position.x;
             // debugger;
-            if((differencez > 0.01 || differencez < 0.01) && (differencex > 0.01 || differencex < 0.01))
+            if((differencez > 10 || differencez < 10) && (differencex > 10 || differencex < 10))
             {
 
         //         for (var i = bullets.length-1; i >= 0; i--) {
