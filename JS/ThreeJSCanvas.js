@@ -1,116 +1,9 @@
 var clock = new THREE.Clock();
 var options, spawnerOptions, tick = 0;
 
-function Projectile(position, mesh){
-   this.position = position;
-   this.mesh = mesh;
-}
 
-Projectile.prototype.getWorldPosition = function(){
-    return {x: this.position.x * 5, y: this.position.y, z: this.position.z * 5};
-};
 
-function radiansToDegrees(radians){
-    return 180 * radians / Math.PI;
-}
 
-function degreesToRadians(degrees){
-    return degrees * (Math.PI / 180);
-}
-
-function lerpTowards(value, target, step){
-    if(value < target){
-        value += step;
-    }
-    else if(value > target){
-        value -= step;
-    }
-    return value;
-}
-
-function Player(grid){
-    this.x = 0;
-    this.z = 0;
-    this.gridX = 0;
-    this.gridZ = 0;
-    this.rotY = 0;
-    this.desiredRotY = 0;
-    this.grid = grid;
-}
-
-Player.prototype.moveForward = function(){
-    if(this.rotY === 0){
-        if(this.grid[this.gridZ - 1][this.gridX] !== 0){
-            this.z -= 5;
-            this.gridZ -= 1;
-        }
-    }
-    else if(this.rotY == radiansToDegrees(Math.PI / 2) || this.rotY == radiansToDegrees((-3 * Math.PI / 2))){
-        if(this.grid[this.gridZ][this.gridX - 1] !== 0){
-            this.x -= 5;
-            this.gridX -= 1;
-        }
-    }
-    else if(this.rotY == radiansToDegrees((3 * Math.PI / 2)) || this.rotY == radiansToDegrees(-Math.PI / 2)){
-        if(this.grid[this.gridZ][this.gridX + 1] !== 0){
-            this.x += 5;
-            this.gridX += 1;
-        }
-    }
-    else if(this.rotY == radiansToDegrees(Math.PI) || this.rotY == radiansToDegrees(-Math.PI)){
-        if(this.grid[this.gridZ + 1][this.gridX] !== 0){
-            this.z += 5;
-            this.gridZ += 1;
-        }
-    }
-};
-
-Player.prototype.moveBackward = function(grid){
-    if(this.rotY === 0){
-        if(this.grid[this.gridZ + 1][this.gridX] !== 0){
-            this.z += 5;
-            this.gridZ += 1;
-        }
-    }
-    else if(this.rotY == radiansToDegrees(Math.PI / 2) || this.rotY == radiansToDegrees((-3 * Math.PI / 2))){
-        if(this.grid[this.gridZ][this.gridX + 1] !== 0){
-            this.x += 5;
-            this.gridX += 1;
-        }
-    }
-    else if(this.rotY == radiansToDegrees((3 * Math.PI / 2)) || this.rotY == radiansToDegrees(-Math.PI / 2)){
-        if(this.grid[this.gridZ][this.gridX - 1] !== 0){
-            this.x -= 5;
-            this.gridX -= 1;
-        }
-    }
-    else if(this.rotY == 180 || this.rotY == -180){
-        if(this.grid[this.gridZ - 1][this.gridX] !== 0){
-            this.z -= 5;
-            this.gridZ -= 1;
-        }
-    }
-};
-
-Player.prototype.setTurnLeft = function(){
-    this.desiredRotY += 90;
-};
-
-Player.prototype.setTurnRight = function(){
-    this.desiredRotY -= 90;
-};
-
-Player.prototype.lerpRotation = function(deltaTime){
-    console.log(this.rotY);
-    console.log(this.desiredRotY);
-    if(this.rotY != this.desiredRotY){
-        this.rotY = lerpTowards(this.rotY, this.desiredRotY, 1);
-    }
-    if(this.rotY == 360 || this.rotY == -360){
-        this.rotY = 0;
-        this.desiredRotY = 0;
-    }
-};
 
 function THREECanvas(){
     this.width = 800;
@@ -133,7 +26,13 @@ function THREECanvas(){
     this.textures = [];
     this.enemies = [];
     this.projectiles = [];
+    
     this.particleSystems = [];
+
+
+    //Actual Non Mesh Information Storage 
+    this.bullets = [];
+    this.monsters = [];
 
     this.init();
 }
@@ -142,8 +41,20 @@ THREECanvas.prototype.init = function(){
     this.renderer.setSize(this.width, this.height);
     document.body.appendChild( this.renderer.domElement );
     this.loadTexture("./IMG/Textures/CobbleFloor.png", 100, 100);
+    this.loadTexture("./IMG/Textures/CobbleFloor2.png", 100, 100);
+    this.loadTexture("./IMG/Textures/CobbleFloor3.png", 100, 100);
+    this.loadTexture("./IMG/Textures/CobbleFloor4.png", 100, 100);
+
     this.loadTexture("./IMG/Textures/TempleWall.png", 1, 1);
+    this.loadTexture("./IMG/Textures/TempleWall2.png", 1, 1);
+    this.loadTexture("./IMG/Textures/TempleWall3.png", 1, 1);
+    this.loadTexture("./IMG/Textures/TempleWall4.png", 1, 1);
     this.loadTexture("./IMG/Textures/DummyUVs_textured.png", 1, 1);
+
+    var tempenemytexture = 8;
+    var floor = Math.floor(Math.random() * 4);
+
+
     for(var i=0; i < this.map.grid.length; i++){
         for(var j=0; j < this.map.grid[i].length; j++){
             if(this.map.grid[i][j] === 0){
@@ -162,23 +73,65 @@ THREECanvas.prototype.init = function(){
     // for(var k=0; k < 50; k++){
     //     this.loadModelGeometry("./MODELS/candle2.json", new THREE.Vector3(getRandomArbitrary(-25, 25), getRandomArbitrary(1, 2), getRandomArbitrary(-25, 25)), new THREE.Vector3(0,0,0));
     // }
-    this.loadModelGeometry("./MODELS/Dummy.json", new THREE.Vector3(this.player.x,-1.5,this.player.z), new THREE.Vector3(0,0,0), new THREE.MeshBasicMaterial({color: 0xffffff, map: this.textures[2]}), "enemy");
-    this.addMeshToScene(this.makeGeometry(THREE.BoxGeometry, 500, 500, 0.01), new THREE.MeshBasicMaterial({color: 0xffffff, map: this.textures[0]}), new THREE.Vector3(0, -2, 0), new THREE.Vector3(Math.PI / 2,0,0));
+
+    //var proj = new Projectile({x: this.player.gridX, y: 1, z: this.player.gridZ}, this.projectiles[this.projectiles.length - 1]);
+
+    
+    this.loadModelGeometry("./MODELS/Dummy.json", new THREE.Vector3(this.player.x,-1.5,this.player.z), new THREE.Vector3(0,0,0), new THREE.MeshBasicMaterial({color: 0xffffff, map: this.textures[tempenemytexture]}), "enemy");
+    this.addMeshToScene(this.makeGeometry(THREE.BoxGeometry, 500, 500, 0.01), new THREE.MeshBasicMaterial({color: 0xffffff, map: this.textures[floor]}), new THREE.Vector3(0, -2, 0), new THREE.Vector3(Math.PI / 2,0,0));
 };
 
 function getRandomArbitrary(min, max) {
   return Math.random() * (max - min) + min;
 }
 
-THREECanvas.prototype.addWallSegment = function(x, y){
-    this.addMeshToScene(this.makeGeometry(THREE.BoxGeometry, 5, 5, 5), new THREE.MeshBasicMaterial({color: 0xffffff, map: this.textures[1]}), new THREE.Vector3(x * 5, 0.5, y * 5), new THREE.Vector3(0,0,0));
+THREECanvas.prototype.addWallSegment = function(x, y)
+{
+    var wall = Math.floor(Math.random() * 4 + 4);
+
+    this.addMeshToScene(this.makeGeometry(THREE.BoxGeometry, 5, 5, 5), new THREE.MeshBasicMaterial({color: 0xffffff, map: this.textures[wall]}), new THREE.Vector3(x * 5, 0.5, y * 5), new THREE.Vector3(0,0,0));
 };
 
-THREECanvas.prototype.spawnPlayerProjectile = function(element, accent, targets){
+THREECanvas.prototype.spawnPlayerProjectile = function(element, accent, targets, spell){
     // var projGroup = new Object3D();
     for(var i=0; i < targets.length;i++){
-        this.addMeshToScene(this.makeGeometry(THREE.SphereGeometry, .5, 16, 16), new THREE.MeshBasicMaterial({color: 0xffffff, transparent: true, opacity: .15}), new THREE.Vector3(this.player.x, 0, this.player.z), new THREE.Vector3(0,0,0), "projectile");
+        this.addMeshToScene(this.makeGeometry(THREE.SphereGeometry, .5, 16, 16), 
+            new THREE.MeshBasicMaterial({color: 0xffffff, transparent: true, opacity: .15}), 
+            new THREE.Vector3(this.player.x, 0, this.player.z), 
+            new THREE.Vector3(0,0,0), "projectile");
+
+
         var proj = new Projectile({x: this.player.gridX, y: 1, z: this.player.gridZ}, this.projectiles[this.projectiles.length - 1]);
+        proj.setSpell(spell);
+
+        if(this.player.rotY === 0){
+            if(this.player.grid[this.player.gridZ - 1][this.player.gridX] !== 0){
+                proj.addZ = -0.5;
+            }
+        }
+        else if(this.player.rotY == radiansToDegrees(Math.PI / 2) || this.player.rotY == radiansToDegrees((-3 * Math.PI / 2))){
+            if(this.player.grid[this.player.gridZ][this.player.gridX - 1] !== 0){
+
+                proj.addX = -0.5;
+            }
+        }
+        else if(this.player.rotY == radiansToDegrees((3 * Math.PI / 2)) || this.player.rotY == radiansToDegrees(-Math.PI / 2)){
+            if(this.player.grid[this.player.gridZ][this.player.gridX + 1] !== 0){
+
+                proj.addX = 0.5;
+            }
+        }
+        else if(this.player.rotY == radiansToDegrees(Math.PI) || this.player.rotY == radiansToDegrees(-Math.PI)){
+            if(this.player.grid[this.player.gridZ + 1][this.player.gridX] !== 0){
+                proj.addZ = 0.5;
+            }
+        }
+
+        // debugger;
+
+        
+
+        this.bullets.push(proj);
     }
 };
 
@@ -240,6 +193,13 @@ THREECanvas.prototype.addMeshToScene = function(geo, material, position, rotatio
     }
     this.scene.add(mesh);
     if(type == "enemy"){
+        var dummy1 = dummy.clone();
+        dummy1.setMesh(mesh);
+        this.monsters.push(dummy1);
+
+        // debugger;
+
+
         this.enemies.push(mesh);
     }
     else if(type == "projectile"){
@@ -308,6 +268,8 @@ $("body").keypress(function(event){
     }
 });
 
+
+
 function update()
 {
     this.deltaTime = clock.getDelta();
@@ -334,14 +296,79 @@ function update()
         }
     }
 
+
+
+
+
+    for (var x = 0; x < myThreeCanvas.bullets.length; x++)
+    {
+        myThreeCanvas.bullets[x].mesh.position.z += myThreeCanvas.bullets[x].addZ;
+        myThreeCanvas.bullets[x].mesh.position.x += myThreeCanvas.bullets[x].addX;
+
+
+        // debugger;
+        for (var x2 = 0; x2 < myThreeCanvas.monsters.length; x2++)
+        {
+           // debugger;
+            var differencez = myThreeCanvas.monsters[x2].mesh.position.z - myThreeCanvas.bullets[x].mesh.position.z;
+            var differencex = myThreeCanvas.monsters[x2].mesh.position.x - myThreeCanvas.bullets[x].mesh.position.x;
+            // debugger;
+            if((differencez > 0.01 || differencez < 0.01) && (differencex > 0.01 || differencex < 0.01))
+            {
+
+        //         for (var i = bullets.length-1; i >= 0; i--) {
+        // var b = bullets[i], p = b.position, d = b.ray.direction;
+        // if (checkWallCollision(p)) {
+        //     bullets.splice(i, 1);
+        //     scene.remove(b);
+        //     continue;
+        // }
+                
+                console.log("WE HIT THE JACKPOT!!");
+
+
+
+                myThreeCanvas.monsters[x2].onContact(myThreeCanvas.bullets[x].spell);
+
+                var b = myThreeCanvas.bullets[x].mesh;
+                myThreeCanvas.bullets.splice(x, 1);
+                myThreeCanvas.scene.remove(b);
+
+
+
+                continue;
+
+
+                // myThreeCanvas.scene.remove(myThreeCanvas.bullets[x].mesh);
+                // myThreeCanvas.scene.remove(myThreeCanvas.bullets[x]);
+                // myThreeCanvas.bullets[x] =  "";
+                // break;
+
+
+                // debugger;
+             
+
+
+
+            }
+            
+
+        }
+
+
+    }
+    
+    
+    
+
     myThreeCanvas.particleSystems[0].update(tick);
-    // myThreeCanvas.particleSystems[0].position.x = Math.sin(tick * spawnerOptions.horizontalSpeed) * 20;
-    // myThreeCanvas.particleSystems[0].position.y = Math.sin(tick * spawnerOptions.verticalSpeed) * 10;
-    // myThreeCanvas.particleSystems[0].position.z = Math.sin(tick * spawnerOptions.horizontalSpeed + spawnerOptions.verticalSpeed) * 5;
-    // myThreeCanvas.camera.lookAt(myThreeCanvas.particleSystems[0].position);
 
     requestAnimationFrame(update);
 }
 
 requestAnimationFrame(update);
 });
+
+
+
+

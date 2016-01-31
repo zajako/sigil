@@ -100,7 +100,7 @@ Sigil.prototype.initCanvas = function() {
 Sigil.prototype.draw = function()
 {
 
-    console.log("Drawing");
+    // console.log("Drawing");
     sigil.bottomCtx.clearRect(0, 0, sigil.width, sigil.height);
 
     $.each(sigil.drawObjects, function( index, object )
@@ -306,7 +306,7 @@ Sigil.prototype.mouseUpEvent = function(x, y)
 
             console.log("Result: " + result.Name + " (" + round(result.Score,2) + ").");
 
-            _spellForms[_cForm].setSpellCast(result.Name, _cForm);
+            _spellForms[_cForm].setSpellCast(result.Name, _cForm, result.Score);
 
             if(_cForm >= 2)
             {
@@ -340,13 +340,13 @@ Sigil.prototype.castSpell = function()
             if(lerpVector2(_spellForms[i].points[i2], 400, 0))
             {
                 dotsfinished += 1;
-                console.log("dotsFinished = "+dotsfinished+"/"+_spellForms[i].points.length);
+                // console.log("dotsFinished = "+dotsfinished+"/"+_spellForms[i].points.length);
             }
         }
         if(dotsfinished >= _spellForms[i].points.length)
         {
             formsfinished += 1;
-            console.log("formsFinished = "+formsfinished+"/"+_spellForms.length);
+            // console.log("formsFinished = "+formsfinished+"/"+_spellForms.length);
         }
     }
 
@@ -361,16 +361,18 @@ Sigil.prototype.castSpell = function()
     {
         // console.log(_spellForms);
         
-        var spell = new Spell(_spellForms[0], _spellForms[0], "ball", "", _spellForms[0].material);
-        var spell2 = new Spell(_spellForms[1], _spellForms[1], "ball", "", _spellForms[1].material);
-        var spell3 = new Spell(_spellForms[2], _spellForms[2], "ball", "", _spellForms[2].material);
+        if(_spellForms[0].material && _spellForms[1].material && _spellForms[2].material)
+        {
+            var spell = new Spell(_spellForms[0].cast, _spellForms[0].cast, "ball", "", _spellForms[0].material, _spellForms[0].score);
+            var spell2 = new Spell(_spellForms[1].cast, _spellForms[1].cast, "ball", "", _spellForms[1].material, _spellForms[1].score);
+            var spell3 = new Spell(_spellForms[2].cast, _spellForms[2].cast, "ball", "", _spellForms[2].material, _spellForms[2].score);
+        }
 
         console.log("Cast Finished.");
         _spellForms = [];
         _cForm = 0;
         sigil.draw();
         _castFinished = false;
-
 
         spell.cast();
         spell2.cast();

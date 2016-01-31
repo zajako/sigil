@@ -1,4 +1,6 @@
-function Spell(name, element, accent, modifier, material){
+
+function Spell(name, element, accent, modifier, material, score)
+{
   holdholdSelf = this;
   this.name = name;
   this.element = element;
@@ -6,6 +8,7 @@ function Spell(name, element, accent, modifier, material){
   this.particleSystem = myThreeCanvas.getParticleSystemFor(element);
   this.accent = accent;
   this.modifier = modifier;
+  this.score = score;
   // this.position = position;
 }
 
@@ -14,14 +17,7 @@ Spell.prototype.cast = function(){
 
 
 
-
-
-
-
-
-
-
-   myThreeCanvas.spawnPlayerProjectile(this.element, "ball", [{forward: 2, right:0}]);
+   myThreeCanvas.spawnPlayerProjectile(this.element, "ball", [{forward: 2, right:0}], this);
 
 
   // if(this.accent == "ball"){

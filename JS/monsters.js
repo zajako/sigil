@@ -8,6 +8,27 @@ function Monster(img, name, mind, body, spirit, melee, ranged)
     this.spirit = spirit;
     this.melee = melee;
     this.ranged = ranged;
+    this.mesh = "";
+    this.resist = "";
+    this.weak = "";
+    this.current_mind = mind;
+    this.current_body = body;
+    this.current_spirit = spirit;
+}
+
+Monster.prototype.clone = function()
+{
+	var temp = new Monster();
+    for (myvar in this)
+    {
+        temp[myvar] = this[myvar];
+    }
+    return temp;
+}
+
+Monster.prototype.setMesh = function(mesh)
+{
+	this.mesh = mesh;
 }
 
 Monster.prototype.setResist = function(element)
@@ -22,7 +43,10 @@ Monster.prototype.setWeak = function(element)
 
 Monster.prototype.onContact = function(spell)
 {
-	var damage = 10;
+	console.log("Monster has been hit! M:"+this.current_mind+"/"+this.mind+
+			" B:"+this.current_body+"/"+this.body+" S:"+this.current_spirit+"/"+this.spirit+" SpellScore:"+spell.score+ " Material:" +spell.material.name);
+
+	var damage = spell.score / 3;
 
 	if(spell.element == this.weak)
 	{
@@ -39,47 +63,52 @@ Monster.prototype.onContact = function(spell)
 		damage /= 3;
 	}
 
+	console.log("Damage: "+damage);
+
 	//Handle Material
 	if(this.mind > 0)
 	{
-		if(spell.material.name == "mercury" || spell.material.name == "blood")
+		if(spell.material.name == "mercury" || spell.material.name == "Blood")
 		{
-			this.mind -= damage;
-			if(this.spirit <= 0)
-				this.spirit = 0;
+			console.log("Monster Takes Mind Damage!");
+			this.current_mind -= damage;
 		}
 	}
 
 	if(this.body > 0)
 	{
-		if(spell.material.name == "charcoal" || spell.material.name == "blood")
+		if(spell.material.name == "charcoal" || spell.material.name == "Blood")
 		{
-			this.body -= damage;
-			if(this.spirit <= 0)
-				this.spirit = 0;
+			console.log("Monster Takes Body Damage!");
+			this.current_body -= damage;
 		}
 	}
 
 	if(this.spirit > 0)
 	{
-		if(spell.material.name == "gold" || spell.material.name == "blood")
+		if(spell.material.name == "gold" || spell.material.name == "Blood")
 		{
-			this.spirit -= damage;
-
-			if(this.spirit <= 0)
-				this.spirit = 0;
+			console.log("Monster Takes Spirit Damage!");
+			this.current_spirit -= damage;
 		}
 	}
 
-	if(this.mind == 0 || this.body == 0 || this.spirit == 0)
+	if(
+		(this.mind > 0 && this.current_mind <= 0) || 
+		(this.body > 0 && this.current_body <= 0) || 
+		(this.spirit > 0 && this.current_spirit <= 0)
+	)
 	{
 		this.death();
 	}
+	// debugger;
 }
 
 Monster.prototype.death = function()
 {
 	//Despawn Monster
+	console.log("Monster Has Died!");
+	myThreeCanvas.scene.remove(this);
 }
 
 //Monster(img, name, mind, body, spirit, melee, ranged)

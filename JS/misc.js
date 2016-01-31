@@ -25,3 +25,23 @@ function drawRotatedImage(image, x, y, angle) {
     // and restore the co-ords to how they were when we began
     sigil.bottomCtx.restore(); 
 }
+
+
+
+function radiansToDegrees(radians){
+    return 180 * radians / Math.PI;
+}
+
+function degreesToRadians(degrees){
+    return degrees * (Math.PI / 180);
+}
+
+function lerpTowards(value, target, step){
+    if(value < target){
+        value += step;
+    }
+    else if(value > target){
+        value -= step;
+    }
+    return value;
+}
