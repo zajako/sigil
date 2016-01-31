@@ -255,7 +255,7 @@ Sigil.prototype.selectGold = function()
     console.log("Gold Selected");
     sigil.material = gold;
 
-    // sigil.targetMonster(dummy);
+    sigil.targetMonster(orc);
 
 
     // this.unlockBook3();

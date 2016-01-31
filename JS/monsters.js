@@ -182,7 +182,7 @@ Monster.prototype.death = function()
 }
 
 //Monster(img, name, mind, body, spirit, melee, ranged)
-dummy = new Monster('', 'Training Dummy', -1, 100, -1, 0, 0, "./MODELS/Dummy.json");
+dummy = new Monster('', 'Training Dummy', -1, 100, -1, 20, 0, "./MODELS/Dummy.json");
 dummy.setResist('water');
 dummy.setWeak('fire');
 dummy.setTextureId(11);
@@ -240,18 +240,18 @@ golem.setResist('earth');
 golem.setWeak('air');
 
 var monsterTypeEnum = {
-	"G" : "golem",
-	"p" : "human",
-	"h" : "elf",
-	"r" : "dwarf",
-	"f" : "fire",
-	"w" : "water",
-	"e" : "earth",
-	"a" : "air",
-	"w" : "wight",
-	"z" : "zombie",
-	"s" : "skel",
-	"o" : "orc",
-	"g" : "goblin",
+	"G" : golem,
+	"p" : human,
+	"h" : elf,
+	"r" : dwarf,
+	"f" : fire,
+	"w" : water,
+	"e" : earth,
+	"a" : air,
+	"w" : wight,
+	"z" : zombie,
+	"s" : skel,
+	"o" : orc,
+	"g" : goblin,
 	"d" : dummy
 };
