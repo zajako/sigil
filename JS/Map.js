@@ -4,6 +4,18 @@ function Map(){
   this.grid = [];
 
   this.init();
+
+
+  this.walls[0] = './IMG/Textures/TempleWall.png';
+  this.walls[1] = './IMG/Textures/TempleWall2.png';
+  this.walls[2] = './IMG/Textures/TempleWall3.png';
+  this.walls[3] = './IMG/Textures/TempleWall4.png';
+
+  this.floor[0] = './IMG/Textures/CobbleFloor.png';
+  this.floor[1] = './IMG/Textures/CobbleFloor2.png';
+  this.floor[2] = './IMG/Textures/CobbleFloor3.png';
+  this.floor[3] = './IMG/Textures/CobbleFloor4.png';
+
 }
 
 Map.prototype.init = function(){
