@@ -20,6 +20,69 @@ Monster.prototype.setWeak = function(element)
 	this.weak = element;
 }
 
+Monster.prototype.onContact = function(spell)
+{
+	var damage = 10;
+
+	if(spell.element == this.weak)
+	{
+		damage *= 2;
+	}
+
+	if(spell.element == this.resist)
+	{
+		damage /= 2;
+	}
+
+	if(spell.material.name == "blood")
+	{
+		damage /= 3;
+	}
+
+	//Handle Material
+	if(this.mind > 0)
+	{
+		if(spell.material.name == "mercury" || spell.material.name == "blood")
+		{
+			this.mind -= damage;
+			if(this.spirit <= 0)
+				this.spirit = 0;
+		}
+	}
+
+	if(this.body > 0)
+	{
+		if(spell.material.name == "charcoal" || spell.material.name == "blood")
+		{
+			this.body -= damage;
+			if(this.spirit <= 0)
+				this.spirit = 0;
+		}
+	}
+
+	if(this.spirit > 0)
+	{
+		if(spell.material.name == "gold" || spell.material.name == "blood")
+		{
+			this.spirit -= damage;
+
+			if(this.spirit <= 0)
+				this.spirit = 0;
+		}
+	}
+
+	if(this.mind == 0 || this.body == 0 || this.spirit == 0)
+	{
+		this.death();
+	}
+}
+
+Monster.prototype.death = function()
+{
+	//Despawn Monster
+}
+
+//Monster(img, name, mind, body, spirit, melee, ranged)
 dummy = new Monster('', 'Training Dummy', -1, 100, -1, 0, 0);
 dummy.setResist('water');
 dummy.setWeak('fire');

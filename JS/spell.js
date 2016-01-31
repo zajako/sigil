@@ -1,7 +1,8 @@
-function Spell(name, element, accent, modifier){
+function Spell(name, element, accent, modifier, material){
   holdholdSelf = this;
   this.name = name;
   this.element = element;
+  this.material = material;
   this.particleSystem = myThreeCanvas.getParticleSystemFor(element);
   this.accent = accent;
   this.modifier = modifier;
@@ -10,6 +11,16 @@ function Spell(name, element, accent, modifier){
 
 
 Spell.prototype.cast = function(){
+
+
+
+
+
+
+
+
+
+
    myThreeCanvas.spawnPlayerProjectile(this.element, "ball", [{forward: 2, right:0}]);
 
 

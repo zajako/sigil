@@ -359,11 +359,11 @@ Sigil.prototype.castSpell = function()
 
     if(_castFinished)
     {
-        console.log(_spellForms);
+        // console.log(_spellForms);
         
-        var spell = new Spell(_spellForms[0], _spellForms[0], "ball", "");
-        var spell2 = new Spell(_spellForms[1], _spellForms[1], "ball", "");
-        var spell3 = new Spell(_spellForms[2], _spellForms[2], "ball", "");
+        var spell = new Spell(_spellForms[0], _spellForms[0], "ball", "", _spellForms[0].material);
+        var spell2 = new Spell(_spellForms[1], _spellForms[1], "ball", "", _spellForms[1].material);
+        var spell3 = new Spell(_spellForms[2], _spellForms[2], "ball", "", _spellForms[2].material);
 
         console.log("Cast Finished.");
         _spellForms = [];
