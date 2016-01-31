@@ -6,8 +6,11 @@ function Projectile(position, mesh, element){
 
    this.addX = 0;
    this.addZ = 0;
+   this.addXOffset = 0;
+   this.addZOffset = 0;
    this.xOffset = 0;
    this.zOffset = 0;
+   this.forward = "";
 }
 
 Projectile.prototype.getWorldPosition = function(){

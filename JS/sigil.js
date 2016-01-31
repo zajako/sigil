@@ -538,9 +538,7 @@ Sigil.prototype.castSpell = function()
         sigil.draw();
         _castFinished = false;
 
-        spell.cast();
-        spell2.cast();
-        spell3.cast();
+        myThreeCanvas.castSpell([spell, spell2, spell3]);
     }
     else
     {

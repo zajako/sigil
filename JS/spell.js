@@ -3,11 +3,11 @@ function Spell(name, element, accent, modifier, material, score)
 {
   holdholdSelf = this;
   this.name = name;
-  this.element = element;
+  this.element = element ? element : "fire";
   this.material = material;
   this.particleSystem = myThreeCanvas.getParticleSystemFor(element);
-  this.accent = accent;
-  this.modifier = modifier;
+  this.accent = accent ? accent : "ball";
+  this.modifier = modifier ? modifier : "long";
   this.score = score;
   // this.position = position;
 }
