@@ -79,7 +79,7 @@ Player.prototype.lerpRotation = function(deltaTime){
     // console.log(this.rotY);
     // console.log(this.desiredRotY);
     if(this.rotY != this.desiredRotY){
-        this.rotY = lerpTowards(this.rotY, this.desiredRotY, 1);
+        this.rotY = lerpTowards(this.rotY, this.desiredRotY, 5);
     }
     if(this.rotY == 360 || this.rotY == -360){
         this.rotY = 0;

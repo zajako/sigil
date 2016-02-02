@@ -34,7 +34,7 @@ function THREECanvas(){
 
 THREECanvas.prototype.init = function(){
     this.renderer.setSize(this.width, this.height);
-    document.body.appendChild( this.renderer.domElement );
+    
 
     this.loadIn();
 };

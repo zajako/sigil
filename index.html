@@ -10,6 +10,7 @@
 	    <script src="./JS/GPUParticles.js" type="text/javascript"></script>
 	   	<script src="./JS/dollar.js" type="text/javascript"></script>
 	   	<script src="./JS/three.audio.js" type="text/javascript"></script>
+	   	<script src="./JS/jquery.ui.touch-punch.min.js" type="text/javascript"></script>
 
  	 	<!-- Misc Functions -->
  	 	<script src="./JS/misc.js" type="text/javascript"></script>
@@ -53,9 +54,9 @@
 		<script>
 			var myThreeCanvas = new THREECanvas();
 			var sigil = new Sigil();
+			document.body.appendChild(myThreeCanvas.renderer.domElement);
+			document.body.appendChild(document.createElement('br'));
 			document.body.appendChild(sigil.bottomScreen);
-
-
 		</script>
 
 	</body>
