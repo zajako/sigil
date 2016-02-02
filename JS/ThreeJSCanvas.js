@@ -290,9 +290,15 @@ THREECanvas.prototype.updateEnemyTargeting = function(){
     for(var i=0; i<this.monsters.length;i++){
         //This checks to see if the mesh has been instantiated and placed yet, probably a better way to do this.
         if(this.monsters[i].mesh.position !== undefined){
-            var distance = this.getDistanceFromVector(this.camera.position, this.monsters[i].mesh.position);
+
+
+            var distance = this.camera.position.distanceTo(this.monsters[i].mesh.position);
+            distance = distance / 5;
+            // console.log("testing distance:" + distance);
+            // var distance = this.getDistanceFromVector(this.camera.position, this.monsters[i].mesh.position);
             if(distance <= 3 && distance > 1)
             {
+                console.log("Hit by Ranged");
                 sigil.targetMonster(this.monsters[i]);
                 if(this.monsters[i].ranged > 0)
                     this.monsters[i].rangedAttack();
@@ -300,6 +306,7 @@ THREECanvas.prototype.updateEnemyTargeting = function(){
             }
             else if(distance <= 1)
             {
+                console.log("hit by melee");
                 sigil.targetMonster(this.monsters[i]);
                 if(this.monsters[i].melee > 0)
                     this.monsters[i].attack();
@@ -365,9 +372,23 @@ THREECanvas.prototype.processProjectiles = function(tick){
             myBullet.position.z += myBullet.addZ;
 
             for(var l=0;l<this.monsters.length;l++){
+                if(this.monsters[l].isDead())
+                {
+                    var m = this.monsters[l];
+                    this.monsters.splice(l, 1);
+                    this.scene.remove(m);
+                }
+                if(this.mybullet != undefined && this.myBullet.isHit)
+                {
+                    //remove bullet
+                    this.bulletGroups[k].splice(j,1);
+                    this.scene.remove(myBullet);
+                }
+
+
                 var distanceToMonster = this.getDistanceFromVector(this.bulletGroups[k][0].mesh.position, this.monsters[l].mesh.position);
 
-                if(Math.abs(distanceToMonster) < 4.5){
+                if(Math.abs(distanceToMonster) <= 5){
                     // debugger;
                     if(!myBullet.isHit)
                     {
